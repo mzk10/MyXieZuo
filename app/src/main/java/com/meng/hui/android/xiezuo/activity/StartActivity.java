@@ -92,4 +92,14 @@ public class StartActivity extends MyActivity {
     public void startAction(Bundle savedInstanceState) {
         iv_anim_welcome_scale.startAnimation(anim_welcome_scale);
     }
+
+    @Override
+    public void onBackClicked() {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
 }
