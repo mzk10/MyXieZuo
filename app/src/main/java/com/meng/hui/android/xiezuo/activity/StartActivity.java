@@ -74,7 +74,7 @@ public class StartActivity extends MyActivity {
                         startActivity(intent);
                         finish();
                     }
-                }, 5000);
+                }, 2000);
             }
 
             @Override

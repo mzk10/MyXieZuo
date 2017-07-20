@@ -22,7 +22,10 @@
 
         <activity
             android:name=".activity.BookListActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"
+            >
+
+        </activity>
 
     </application>
 
