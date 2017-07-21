@@ -1,68 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorWhite"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="5dip"
     >
 
-    <TextView
-        android:id="@+id/tv_booklist_item_bookname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="5dip"
-        android:layout_marginTop="5dip"
-        android:text="《无限萌娘》"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp"
-        />
-
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/inputdialog_bg"
+        android:orientation="vertical"
+        android:padding="5dip"
         >
 
         <TextView
-            android:id="@+id/tv_booklist_item_booklength"
+            android:id="@+id/tv_booklist_item_bookname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="2dip"
+            android:text="《无限萌娘》"
             android:textColor="@color/colorBlack"
-            android:textSize="14sp"
-            android:text="共175章"
+            android:textSize="18sp"
             />
 
-        <View
-            android:layout_width="1dip"
-            android:layout_height="match_parent"
-            android:layout_margin="1dip"
-            android:background="@color/colorGray"
-            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal"
+            android:padding="2dip"
+            >
+
+            <TextView
+                android:id="@+id/tv_booklist_item_bookcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1dip"
+                android:text="共175章"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:layout_margin="1dip"
+                android:background="@color/colorGray"
+                android:padding="1dip"
+                />
+
+            <TextView
+                android:id="@+id/tv_booklist_item_booklength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1dip"
+                android:text="总字数：1578602"
+                android:textColor="@color/colorBlack"
+                android:textSize="14sp"
+                />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_booklist_item_bookcount"
+            android:id="@+id/tv_booklist_item_booklasttime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:textSize="14sp"
-            android:text="总字数：1578602"
+            android:padding="2dip"
+            android:text="修改时间：2017年8月15日"
+            android:textColor="@color/colorGray"
+            android:textSize="12sp"
+            android:layout_gravity="end"
             />
 
+
+        <!--<TextView
+            android:id="@+id/tv_booklist_item_booklastdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_booklist_item_bookcreatedate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>-->
     </LinearLayout>
 
-
-    <!--<TextView
-        android:id="@+id/tv_booklist_item_booklastdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/tv_booklist_item_bookcreatedate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>-->
-
-
-</RelativeLayout>
+</LinearLayout>

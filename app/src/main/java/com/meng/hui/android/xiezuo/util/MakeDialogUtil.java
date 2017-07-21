@@ -82,7 +82,7 @@ public class MakeDialogUtil {
                 et_height.setBackgroundResource(R.drawable.edit_bg);
                 et_height.setTextColor(0xff000000);
                 et_height.setHint(Hints[i]);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 100);
                 params.setMargins(20, 10, 20, 0);
                 et_height.setLayoutParams(params);
                 et_height.setText(defs[i]);
