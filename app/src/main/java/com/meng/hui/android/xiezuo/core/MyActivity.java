@@ -2,6 +2,7 @@ package com.meng.hui.android.xiezuo.core;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -15,18 +16,24 @@ public abstract class MyActivity extends Activity implements View.OnClickListene
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        initView(savedInstanceState);
-        initData(savedInstanceState);
-        startAction(savedInstanceState);
+        initView();
     }
 
-    public abstract void initView(Bundle savedInstanceState);
-    public abstract void initData(Bundle savedInstanceState);
-    public abstract void startAction(Bundle savedInstanceState);
+    @Override
+    protected final void onResume() {
+        super.onResume();
+        initData();
+        startAction();
+    }
+
+    public abstract void initView();
+    public abstract void initData();
+    public abstract void startAction();
 
     @Override
     public void finish() {
         super.finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override

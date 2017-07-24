@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/inputdialog_bg"
+        android:background="@drawable/booklist_item_bg"
         android:orientation="vertical"
         android:padding="5dip"
         >
@@ -19,7 +19,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dip"
-            android:text="《无限萌娘》"
             android:textColor="@color/colorBlack"
             android:textSize="18sp"
             />
@@ -37,7 +36,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dip"
-                android:text="共175章"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 />
@@ -55,7 +53,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dip"
-                android:text="总字数：1578602"
                 android:textColor="@color/colorBlack"
                 android:textSize="14sp"
                 />
@@ -67,7 +64,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dip"
-            android:text="修改时间：2017年8月15日"
             android:textColor="@color/colorGray"
             android:textSize="12sp"
             android:layout_gravity="end"

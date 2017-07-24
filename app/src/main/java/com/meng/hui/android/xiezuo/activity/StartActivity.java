@@ -26,14 +26,14 @@ public class StartActivity extends MyActivity {
     private Handler handler = new Handler();
 
     @Override
-    public void initView(Bundle savedInstanceState) {
+    public void initView() {
         setContentView(R.layout.activity_start);
         iv_anim_welcome_scale = findViewById(R.id.iv_anim_welcome_icon);
         iv_anim_welcome = findViewById(R.id.iv_anim_welcome);
     }
 
     @Override
-    public void initData(Bundle savedInstanceState) {
+    public void initData() {
         anim_welcome_scale = AnimationUtils.loadAnimation(this, R.anim.anim_welcome_scale);
         anim_welcome_scale.setDuration(1000);
         anim_welcome_scale.setInterpolator(this, android.R.interpolator.bounce);
@@ -89,7 +89,7 @@ public class StartActivity extends MyActivity {
     }
 
     @Override
-    public void startAction(Bundle savedInstanceState) {
+    public void startAction() {
         iv_anim_welcome_scale.startAnimation(anim_welcome_scale);
     }
 

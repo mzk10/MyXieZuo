@@ -10,8 +10,8 @@
 
     <Button
         android:id="@+id/action_bar_btn_back"
-        android:layout_width="40dip"
-        android:layout_height="40dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/btn_back"
@@ -28,8 +28,8 @@
 
     <Button
         android:id="@+id/action_bar_btn_menu"
-        android:layout_width="40dip"
-        android:layout_height="40dip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/btn_menu"
