@@ -9,7 +9,6 @@ public class BookEntity {
     private int bookId;
     private String bookName;
     private int bookCount;
-    private int bookLength;
     private long lastDate;
     private long createDate;
 
@@ -35,14 +34,6 @@ public class BookEntity {
 
     public void setBookCount(int bookCount) {
         this.bookCount = bookCount;
-    }
-
-    public int getBookLength() {
-        return bookLength;
-    }
-
-    public void setBookLength(int bookLength) {
-        this.bookLength = bookLength;
     }
 
     public long getLastDate() {

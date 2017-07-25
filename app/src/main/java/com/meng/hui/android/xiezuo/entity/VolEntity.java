@@ -7,8 +7,6 @@ package com.meng.hui.android.xiezuo.entity;
 public class VolEntity {
 
     private String valName;
-    private long valLength;
-
     public String getValName() {
         return valName;
     }
@@ -17,11 +15,4 @@ public class VolEntity {
         this.valName = valName;
     }
 
-    public long getValLength() {
-        return valLength;
-    }
-
-    public void setValLength(long valLength) {
-        this.valLength = valLength;
-    }
 }

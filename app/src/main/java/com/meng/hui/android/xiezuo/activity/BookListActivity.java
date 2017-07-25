@@ -168,7 +168,6 @@ public class BookListActivity extends MyActivity {
                 Holder holder = new Holder();
                 holder.bookname = view.findViewById(R.id.tv_booklist_item_bookname);
                 holder.bookcount = view.findViewById(R.id.tv_booklist_item_bookcount);
-                holder.booklength = view.findViewById(R.id.tv_booklist_item_booklength);
                 holder.booklasttime = view.findViewById(R.id.tv_booklist_item_booklasttime);
                 view.setTag(holder);
             }
@@ -176,7 +175,6 @@ public class BookListActivity extends MyActivity {
             Holder holder = (Holder) view.getTag();
             holder.bookname.setText("《" + item.getBookName() + "》");
             holder.bookcount.setText("共" + item.getBookCount() + "章");
-            holder.booklength.setText("总字数:" + item.getBookLength());
             holder.booklasttime.setText("修改时间：" + format.format(item.getLastDate()));
 
             View.OnClickListener listener = listenerMap.get(i);
@@ -199,7 +197,6 @@ public class BookListActivity extends MyActivity {
 
     private class Holder {
         private TextView bookname;
-        private TextView booklength;
         private TextView bookcount;
         private TextView booklasttime;
     }

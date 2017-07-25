@@ -40,23 +40,6 @@
                 android:textSize="14sp"
                 />
 
-            <View
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:layout_margin="1dip"
-                android:background="@color/colorGray"
-                android:padding="1dip"
-                />
-
-            <TextView
-                android:id="@+id/tv_booklist_item_booklength"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="1dip"
-                android:textColor="@color/colorBlack"
-                android:textSize="14sp"
-                />
-
         </LinearLayout>
 
         <TextView

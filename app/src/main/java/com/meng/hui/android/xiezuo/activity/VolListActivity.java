@@ -1,5 +1,6 @@
 package com.meng.hui.android.xiezuo.activity;
 
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,6 @@ public class VolListActivity extends MyActivity {
     private List<VolEntity> vollist;
     private SparseArray<View.OnClickListener> listenerMap;
     private MyAdapter vollist_adapter;
-    //    private SimpleDateFormat format;
     private MyComparator vollist_comparator;
 
     @Override
@@ -72,7 +72,6 @@ public class VolListActivity extends MyActivity {
         vollist = new ArrayList<>();
         listenerMap = new SparseArray<>();
         vollist_adapter = new MyAdapter();
-//        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
         vollist_comparator = new MyComparator();
         lv_booklist.setAdapter(vollist_adapter);
@@ -92,13 +91,11 @@ public class VolListActivity extends MyActivity {
      */
     private void loadVollist() {
         String dir = getExternalFilesDir(null) + BOOKLIST_DIR + bookName +"/";
-        XiezuoDebug.i(TAG, dir);
         File file_dir = new File(dir);
         FileFilter filter = new FileFilter() {
             @Override
             public boolean accept(File file) {
                 String name = file.getName();
-                XiezuoDebug.i(TAG, name);
                 String fileExtensionName = Utils.getFileExtensionName(name);
                 if (!file.isDirectory() && "txt".equals(fileExtensionName)) {
                     return true;
@@ -107,15 +104,14 @@ public class VolListActivity extends MyActivity {
                 }
             }
         };
-        File[] files = file_dir.listFiles(filter);
-        if (files != null)
+        File[] volFiles = file_dir.listFiles(filter);
+        if (volFiles != null)
         {
-            for (File volfile : files) {
+            for (File volfile : volFiles) {
                 if (volfile.exists() && !volfile.isDirectory())
                 {
                     VolEntity entity = new VolEntity();
                     entity.setValName(volfile.getName());
-                    entity.setValLength(volfile.length());
                     vollist.add(entity);
                 }
             }
@@ -202,20 +198,19 @@ public class VolListActivity extends MyActivity {
                 view = inflater.inflate(R.layout.layout_vollist_item, null);
                 Holder holder = new Holder();
                 holder.volname = view.findViewById(R.id.tv_vollist_item_volname);
-                holder.vollength = view.findViewById(R.id.tv_vollist_item_vollenght);
                 view.setTag(holder);
             }
             final VolEntity item = getItem(i);
             Holder holder = (Holder) view.getTag();
             holder.volname.setText(item.getValName());
-            holder.vollength.setText("字数:"+item.getValLength()+"字");
 
             View.OnClickListener listener = listenerMap.get(i);
             if (listener == null) {
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO 处理点击
+                        String valName = item.getValName();
+                        XiezuoDebug.i(TAG, "valName=" + valName);
                     }
                 };
                 listenerMap.put(i, listener);
@@ -227,7 +222,6 @@ public class VolListActivity extends MyActivity {
 
     private class Holder {
         private TextView volname;
-        private TextView vollength;
     }
 
     private class MyComparator implements Comparator<VolEntity>

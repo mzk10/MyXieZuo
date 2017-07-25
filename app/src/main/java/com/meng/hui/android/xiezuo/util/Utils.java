@@ -34,15 +34,8 @@ public class Utils {
                 }
             };
             File[] files = dir.listFiles(filter);
-            int length = 0;
-            for (File f : files) {
-                String s = loadFileString(f, "UTF-8");
-                int len = s.length();
-                length += len;
-            }
             BookEntity entity = new BookEntity();
             entity.setBookCount(files.length);
-            entity.setBookLength(length);
             entity.setBookName(dir.getName());
             entity.setLastDate(dir.lastModified());
             return entity;
@@ -67,13 +60,19 @@ public class Utils {
      * 从文件读取文本内容
      *
      * @param file
-     * @param encode
      * @return
      */
-    public static String loadFileString(File file, String encode) {
+    public static String loadFileString(File file) {
         FileInputStream fis = null;
         InputStreamReader isr = null;
-
+        String encode = "UTF-8";
+        if (file.length() > 0) {
+            try {
+                encode = new FileCharsetDetector().guessFileEncoding(file);
+//                XiezuoDebug.i(TAG, "encode="+encode);
+            } catch (IOException e) {
+            }
+        }
         try {
             fis = new FileInputStream(file);
             isr = new InputStreamReader(fis, encode);
@@ -84,6 +83,7 @@ public class Utils {
                 sb.append(buffer, 0, len);
             }
             String result = sb.toString();
+//            XiezuoDebug.i(TAG, "result="+result);
             return result;
         } catch (Exception e) {
             XiezuoDebug.e(TAG, "", e);
@@ -106,4 +106,30 @@ public class Utils {
         return null;
     }
 
+    /**
+     * 获取文字实际长度
+     *
+     * @param content
+     * @return
+     */
+    public static int getStringAbsLength(String content) {
+//        String cn_words = content.replaceAll("[^(，。《》？；’‘：“”【】、）（……￥！·)]", "");
+//        XiezuoDebug.i(TAG, content);
+//        XiezuoDebug.i(TAG, cn_words);
+//        return cn_words.length();
+        char[] chars = null;
+        chars = content.toCharArray();
+        int count = 0;
+        for (char c : chars) {
+            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+                count++;
+            } else if (c >= '0' && c <= '9') {
+                count++;
+            } else if (c > 128) {
+                XiezuoDebug.i(TAG, String.valueOf(c));
+                count++;
+            }
+        }
+        return count;
+    }
 }
