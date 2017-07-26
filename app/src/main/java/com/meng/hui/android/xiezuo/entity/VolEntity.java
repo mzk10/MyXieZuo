@@ -7,6 +7,8 @@ package com.meng.hui.android.xiezuo.entity;
 public class VolEntity {
 
     private String valName;
+    private String valPath;
+
     public String getValName() {
         return valName;
     }
@@ -15,4 +17,11 @@ public class VolEntity {
         this.valName = valName;
     }
 
+    public String getValPath() {
+        return valPath;
+    }
+
+    public void setValPath(String valPath) {
+        this.valPath = valPath;
+    }
 }

@@ -17,12 +17,12 @@ public abstract class MyActivity extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         initView();
+        initData();
     }
 
     @Override
     protected final void onResume() {
         super.onResume();
-        initData();
         startAction();
     }
 

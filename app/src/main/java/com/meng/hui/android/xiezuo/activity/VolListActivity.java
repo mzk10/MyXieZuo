@@ -1,5 +1,6 @@
 package com.meng.hui.android.xiezuo.activity;
 
+import android.content.Intent;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -112,6 +113,7 @@ public class VolListActivity extends MyActivity {
                 {
                     VolEntity entity = new VolEntity();
                     entity.setValName(volfile.getName());
+                    entity.setValPath(volfile.getPath());
                     vollist.add(entity);
                 }
             }
@@ -209,8 +211,11 @@ public class VolListActivity extends MyActivity {
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String valName = item.getValName();
-                        XiezuoDebug.i(TAG, "valName=" + valName);
+                        String valPath = item.getValPath();
+                        Intent intent = new Intent(VolListActivity.this, VolEditActivity.class);
+                        intent.putExtra("valPath", valPath);
+                        startActivity(intent);
+                        //TODO 未完成
                     }
                 };
                 listenerMap.put(i, listener);

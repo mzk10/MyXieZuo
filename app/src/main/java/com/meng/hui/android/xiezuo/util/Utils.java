@@ -6,8 +6,12 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
@@ -63,13 +67,13 @@ public class Utils {
      * @return
      */
     public static String loadFileString(File file) {
+        String result = "";
         FileInputStream fis = null;
         InputStreamReader isr = null;
         String encode = "UTF-8";
         if (file.length() > 0) {
             try {
                 encode = new FileCharsetDetector().guessFileEncoding(file);
-//                XiezuoDebug.i(TAG, "encode="+encode);
             } catch (IOException e) {
             }
         }
@@ -82,9 +86,7 @@ public class Utils {
             while ((len = isr.read(buffer)) != -1) {
                 sb.append(buffer, 0, len);
             }
-            String result = sb.toString();
-//            XiezuoDebug.i(TAG, "result="+result);
-            return result;
+            result = sb.toString();
         } catch (Exception e) {
             XiezuoDebug.e(TAG, "", e);
         } finally {
@@ -103,12 +105,48 @@ public class Utils {
                 }
             }
         }
-        return null;
+        return result;
+    }
+
+    /**
+     * 将文字写入文件
+     * @param string
+     * @param file
+     */
+    public static void saveStringToFile(String string, File file)
+    {
+        FileOutputStream fos = null;
+        OutputStreamWriter osw = null;
+        try {
+            fos = new FileOutputStream(file);
+            osw = new OutputStreamWriter(fos, "UTF-8");
+            osw.write(string);
+            osw.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (osw!=null)
+            {
+                try {
+                    osw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos!=null)
+            {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     /**
      * 获取文字实际长度
-     *
      * @param content
      * @return
      */
