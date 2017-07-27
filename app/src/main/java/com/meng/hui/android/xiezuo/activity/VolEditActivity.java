@@ -2,6 +2,8 @@ package com.meng.hui.android.xiezuo.activity;
 
 import android.graphics.Typeface;
 import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.meng.hui.android.xiezuo.R;
 import com.meng.hui.android.xiezuo.core.MyActivity;
+import com.meng.hui.android.xiezuo.entity.EditActionEntity;
 import com.meng.hui.android.xiezuo.util.LinkList;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
@@ -29,12 +32,10 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     private ImageButton btn_voledit_back;
     private ImageButton btn_voledit_save;
     private ImageButton btn_voledit_revert;
+    private TextView tv_voledit_count;
 
     private String valPath;
-    private LinkList<String> editActionPool;
-    private boolean isRevert;
-    private boolean isEnter;
-
+    private LinkList<EditActionEntity> editActionPool;
 
     @Override
     public void initView() {
@@ -44,6 +45,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         btn_voledit_save=findViewById(R.id.btn_voledit_save);
         btn_voledit_revert=findViewById(R.id.btn_voledit_revert);
         et_voledit_content = findViewById(R.id.et_voledit_content);
+        tv_voledit_count = findViewById(R.id.tv_voledit_count);
     }
 
     @Override
@@ -56,12 +58,14 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         btn_voledit_back.setOnClickListener(this);
         btn_voledit_save.setOnClickListener(this);
         btn_voledit_revert.setOnClickListener(this);
-        et_voledit_content.addTextChangedListener(this);
         et_voledit_content.setOnKeyListener(this);
 
         File file = new File(valPath);
         String valContent = Utils.loadFileString(file);
         et_voledit_content.setText(valContent);
+        int absLength = Utils.getStringAbsLength(valContent);
+        tv_voledit_count.setText("字数："+absLength);
+        et_voledit_content.addTextChangedListener(this);
     }
 
     @Override
@@ -90,9 +94,8 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         }
     }
 
-
     /**
-     * 保存
+     * 保存文本
      */
     private void saveText() {
         String string = et_voledit_content.getText().toString();
@@ -100,47 +103,62 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     }
 
     private void revertText() {
-        String string = editActionPool.removeLast();
-        if (string != null)
+        EditActionEntity entity = editActionPool.removeLast();
+        if (entity != null)
         {
-            isRevert = true;
-            et_voledit_content.setText(string);
+            et_voledit_content.removeTextChangedListener(this);
+            et_voledit_content.setText(entity.getContent());
+            Selection.setSelection(et_voledit_content.getText(), entity.getLine());
+            et_voledit_content.addTextChangedListener(this);
         }
     }
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        XiezuoDebug.i(TAG, "检测到修改");
+        EditActionEntity entity = new EditActionEntity();
+        entity.setContent(charSequence.toString());
+        entity.setLine(i);
+        editActionPool.add(entity);
     }
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (isRevert)
-        {
-            isRevert = false;
-        }else
-        {
-            editActionPool.add(charSequence.toString());
-        }
     }
 
     @Override
     public void afterTextChanged(Editable editable) {
-        if (isEnter)
-        {
-            isEnter = false;
-            XiezuoDebug.i(TAG, "是回车");
-            editable.append("    ");
-            et_voledit_content.setText(editable);
-        }
     }
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-        if (keyCode == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_UP) {
-            isEnter = true;
+        if (keyCode == KeyEvent.KEYCODE_ENTER)
+        {
+            if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                handleEnter();
+            }
             return true;
         }
         return false;
+    }
+
+    private void handleEnter() {
+        //状态保存
+        EditActionEntity entity = new EditActionEntity();
+        Editable editable = et_voledit_content.getText();
+        entity.setContent(editable.toString());
+        int cursorLocation = Selection.getSelectionEnd(et_voledit_content.getText());
+        entity.setLine(cursorLocation);
+        editActionPool.add(entity);
+        //移除监听
+        et_voledit_content.removeTextChangedListener(this);
+        //修改文本内容
+        Editable insert = editable.insert(cursorLocation, "\n    ");
+        et_voledit_content.setText(insert);
+        int line = cursorLocation + 5;
+        Selection.setSelection(et_voledit_content.getText(), line);
+        //恢复监听
+        et_voledit_content.addTextChangedListener(this);
     }
 
 }

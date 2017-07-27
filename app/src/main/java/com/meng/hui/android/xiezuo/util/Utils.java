@@ -151,23 +151,25 @@ public class Utils {
      * @return
      */
     public static int getStringAbsLength(String content) {
-//        String cn_words = content.replaceAll("[^(，。《》？；’‘：“”【】、）（……￥！·)]", "");
-//        XiezuoDebug.i(TAG, content);
-//        XiezuoDebug.i(TAG, cn_words);
-//        return cn_words.length();
-        char[] chars = null;
-        chars = content.toCharArray();
-        int count = 0;
-        for (char c : chars) {
-            if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-                count++;
-            } else if (c >= '0' && c <= '9') {
-                count++;
-            } else if (c > 128) {
-                XiezuoDebug.i(TAG, String.valueOf(c));
-                count++;
+        if (content!=null)
+        {
+            char[] chars = null;
+            chars = content.toCharArray();
+            int count = 0;
+            for (char c : chars) {
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+                    count++;
+                } else if (c >= '0' && c <= '9') {
+                    count++;
+                } else if (c > 128) {
+                    count++;
+                }
             }
+            return count;
+        }else
+        {
+            return 0;
         }
-        return count;
+
     }
 }

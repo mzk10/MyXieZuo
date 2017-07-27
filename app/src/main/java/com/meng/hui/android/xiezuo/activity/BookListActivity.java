@@ -57,20 +57,6 @@ public class BookListActivity extends MyActivity {
 
     @Override
     public void initData() {
-        action_bar_tv_title.setText("小说列表");
-        action_bar_btn_back.setVisibility(View.INVISIBLE);
-        action_bar_btn_menu.setVisibility(View.INVISIBLE);
-        btn_add.setOnClickListener(this);
-
-        inflater = LayoutInflater.from(this);
-        booklist = new ArrayList<>();
-        listenerMap = new SparseArray<>();
-        booklist_adapter = new MyAdapter();
-        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-
-        booklist_comparator = new MyComparator();
-        lv_booklist.setAdapter(booklist_adapter);
-        refrashBookListView();
     }
 
     private void refrashBookListView() {
@@ -105,7 +91,20 @@ public class BookListActivity extends MyActivity {
 
     @Override
     public void startAction() {
+        action_bar_tv_title.setText("小说列表");
+        action_bar_btn_back.setVisibility(View.INVISIBLE);
+        action_bar_btn_menu.setVisibility(View.INVISIBLE);
+        btn_add.setOnClickListener(this);
 
+        inflater = LayoutInflater.from(this);
+        booklist = new ArrayList<>();
+        listenerMap = new SparseArray<>();
+        booklist_adapter = new MyAdapter();
+        format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+        booklist_comparator = new MyComparator();
+        lv_booklist.setAdapter(booklist_adapter);
+        refrashBookListView();
     }
 
     @Override

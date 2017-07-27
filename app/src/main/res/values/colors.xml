@@ -8,5 +8,5 @@
     <color name="colorBlack">#ff000000</color>
     <color name="colorBlack_t">#aa000000</color>
     <color name="colorGray">#ffaaaaaa</color>
-    <color name="colorEditbg">#ff413d38</color>
+    <color name="colorEditbg">#ff2b2b2b</color>
 </resources>
