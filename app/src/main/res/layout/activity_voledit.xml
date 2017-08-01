@@ -20,21 +20,32 @@
             android:src="@drawable/btn_back"/>
 
         <ImageButton
-            android:id="@+id/btn_voledit_save"
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:layout_toStartOf="@+id/btn_voledit_revert"
+            android:id="@+id/btn_voledit_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@color/colorT"
-            android:src="@android:drawable/ic_menu_save"
+            android:src="@drawable/btn_copy"
+            android:layout_centerInParent="true"
             />
 
         <ImageButton
             android:id="@+id/btn_voledit_revert"
             android:layout_width="40dip"
             android:layout_height="40dip"
-            android:layout_alignParentEnd="true"
+            android:layout_toStartOf="@+id/btn_voledit_unrevert"
+            android:layout_marginEnd="10dip"
             android:background="@color/colorT"
-            android:src="@android:drawable/ic_menu_revert"
+            android:src="@drawable/btn_valedit_revert"
+            />
+
+        <ImageButton
+            android:id="@+id/btn_voledit_unrevert"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dip"
+            android:background="@color/colorT"
+            android:src="@drawable/btn_valedit_unrevert"
             />
 
     </RelativeLayout>

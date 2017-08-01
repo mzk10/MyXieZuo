@@ -1,7 +1,9 @@
 package com.meng.hui.android.xiezuo.util;
 
 
-public class LinkList<T>
+import java.io.Serializable;
+
+public class LinkList<T> implements Serializable
 {
 
     public LinkList()
@@ -9,7 +11,7 @@ public class LinkList<T>
         this.cursor = new Cursor<T>();
     }
 
-    private class Cursor<R>
+    private class Cursor<R> implements Serializable
     {
         public R obj;
         public Cursor<R> next;

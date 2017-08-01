@@ -9,8 +9,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -74,6 +77,8 @@ public class Utils {
         if (file.length() > 0) {
             try {
                 encode = new FileCharsetDetector().guessFileEncoding(file);
+                if (encode.contains(","))
+                encode = encode.substring(0, encode.indexOf(","));
             } catch (IOException e) {
             }
         }
@@ -123,14 +128,14 @@ public class Utils {
             osw.write(string);
             osw.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            XiezuoDebug.e(TAG, "", e);
         } finally {
             if (osw!=null)
             {
                 try {
                     osw.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    XiezuoDebug.e(TAG, "", e);
                 }
             }
             if (fos!=null)
@@ -138,7 +143,7 @@ public class Utils {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    XiezuoDebug.e(TAG, "", e);
                 }
             }
         }
@@ -172,4 +177,64 @@ public class Utils {
         }
 
     }
+
+    /**
+     * 保存可序列化对象
+     * @param obj
+     * @param path
+     */
+    public static void saveSerializable(Serializable obj, String path)
+    {
+        if (obj!=null)
+        {
+            FileOutputStream fos = null;
+            ObjectOutputStream oos = null;
+            try {
+                fos = new FileOutputStream(path);
+                oos = new ObjectOutputStream(fos);
+                oos.writeObject(obj);
+                oos.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally
+            {
+                if (oos!=null)
+                {
+                    try {
+                        oos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fos!=null)
+                {
+                    try {
+                        fos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public static Object loadSerializable(String path)
+    {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        try {
+            fis = new FileInputStream(path);
+            ois = new ObjectInputStream(fis);
+            Object o = ois.readObject();
+            return o;
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
 }

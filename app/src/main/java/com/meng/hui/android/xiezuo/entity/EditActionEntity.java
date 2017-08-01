@@ -1,10 +1,12 @@
 package com.meng.hui.android.xiezuo.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by mzk10 on 2017/7/27.
  */
 
-public class EditActionEntity {
+public class EditActionEntity implements Serializable{
 
     private String content;
     private int line;
