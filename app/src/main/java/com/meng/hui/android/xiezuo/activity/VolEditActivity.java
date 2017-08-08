@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.meng.hui.android.xiezuo.R;
 import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.EditActionEntity;
+import com.meng.hui.android.xiezuo.entity.VolActionEntity;
 import com.meng.hui.android.xiezuo.util.AsyncTaskBeta;
 import com.meng.hui.android.xiezuo.util.LinkList;
 import com.meng.hui.android.xiezuo.util.Utils;
@@ -39,8 +40,9 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     private TextView tv_voledit_count;
 
     private String valPath;
-    private LinkList<EditActionEntity> revertActionPool;
-    private LinkList<EditActionEntity> unRevertActionPool;
+    private VolActionEntity action;
+//    private LinkList<EditActionEntity> revertActionPool;
+//    private LinkList<EditActionEntity> unRevertActionPool;
 
 
     @Override
@@ -74,8 +76,10 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         File file = new File(valPath);
         String valContent = Utils.loadFileString(file);
         et_voledit_content.setText(valContent);
+        Selection.setSelection(et_voledit_content.getText(), action.getLine());
         flushCount(valContent);
         et_voledit_content.addTextChangedListener(this);
+
     }
 
     @Override
@@ -162,7 +166,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
      * 撤销修改
      */
     private void revertText() {
-        EditActionEntity entity = revertActionPool.removeLast();
+        EditActionEntity entity = action.getRevertActionPool().removeLast();
         if (entity != null)
         {
             //保存当前状态到反撤销池
@@ -172,7 +176,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             EditActionEntity current = new EditActionEntity();
             current.setContent(s);
             current.setLine(selectionEnd);
-            unRevertActionPool.add(current);
+            action.getUnRevertActionPool().add(current);
 
             //撤销操作
             String content = entity.getContent();
@@ -189,7 +193,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
      * 反撤销
      */
     private void unRevertText() {
-        EditActionEntity entity = unRevertActionPool.removeLast();
+        EditActionEntity entity = action.getUnRevertActionPool().removeLast();
         if (entity != null)
         {
             //保存当前状态到撤销池
@@ -199,7 +203,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             EditActionEntity current = new EditActionEntity();
             current.setContent(s);
             current.setLine(selectionEnd);
-            revertActionPool.add(current);
+            action.getRevertActionPool().add(current);
 
             //反撤销操作
             String content = entity.getContent();
@@ -214,14 +218,14 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
 
     private void flushRevertState()
     {
-        if (revertActionPool!=null && revertActionPool.size()>0)
+        if (action.getRevertActionPool()!=null && action.getRevertActionPool().size()>0)
         {
             btn_voledit_revert.setEnabled(true);
         }else{
             btn_voledit_revert.setEnabled(false);
         }
 
-        if (unRevertActionPool!=null && unRevertActionPool.size()>0)
+        if (action.getUnRevertActionPool()!=null && action.getUnRevertActionPool().size()>0)
         {
             btn_voledit_unrevert.setEnabled(true);
         }else{
@@ -234,8 +238,8 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         EditActionEntity entity = new EditActionEntity();
         entity.setContent(charSequence.toString());
         entity.setLine(i);
-        revertActionPool.add(entity);
-        unRevertActionPool.removeAll();
+        action.getRevertActionPool().add(entity);
+        action.getUnRevertActionPool().removeAll();
         flushRevertState();
     }
 
@@ -267,7 +271,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         entity.setContent(editable.toString());
         int cursorLocation = Selection.getSelectionEnd(et_voledit_content.getText());
         entity.setLine(cursorLocation);
-        revertActionPool.add(entity);
+        action.getRevertActionPool().add(entity);
         //移除监听
         et_voledit_content.removeTextChangedListener(this);
         //修改文本内容
@@ -279,7 +283,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         Selection.setSelection(et_voledit_content.getText(), line);
         //恢复监听
         et_voledit_content.addTextChangedListener(this);
-        unRevertActionPool.removeAll();
+        action.getUnRevertActionPool().removeAll();
         flushRevertState();
     }
 
@@ -297,8 +301,13 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         AsyncTaskBeta<Void, Void, Void> async = new AsyncTaskBeta<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... param) {
-                Utils.saveSerializable(revertActionPool, valPath+".rev");
-                Utils.saveSerializable(unRevertActionPool, valPath+".unr");
+                int selectionStart = Selection.getSelectionStart(et_voledit_content.getText());
+                action.setLine(selectionStart);
+                Utils.saveSerializable(action, valPath+".bak");
+                /*{
+                    Utils.saveSerializable(revertActionPool, valPath+".rev");
+                    Utils.saveSerializable(unRevertActionPool, valPath+".unr");
+                }*/
                 return null;
             }
         };
@@ -310,18 +319,38 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
      */
     private void loadRevertAction()
     {
-        Object rev = Utils.loadSerializable(valPath + ".rev");
-        if (rev!=null && rev instanceof LinkList){
-            revertActionPool = (LinkList) rev;
+        Object act = Utils.loadSerializable(valPath + ".bak");
+        if (act!=null && act instanceof VolActionEntity)
+        {
+            action = (VolActionEntity)act;
         }else{
-            revertActionPool = new LinkList<>();
+            action = new VolActionEntity();
         }
 
-        Object unr = Utils.loadSerializable(valPath + ".unr");
-            if (unr!=null && unr instanceof LinkList){
-            unRevertActionPool = (LinkList) unr;
-        }else{
-            unRevertActionPool = new LinkList<>();
+        {
+            String pathrev = valPath + ".rev";
+            File file = new File(pathrev);
+            if (file.exists()) {
+                Object rev = Utils.loadSerializable(pathrev);
+                if (rev != null && rev instanceof LinkList) {
+                    LinkList<EditActionEntity> revertActionPool = (LinkList) rev;
+                    action.setRevertActionPool(revertActionPool);
+                }
+                file.delete();
+            }
+        }
+        {
+            String pathunr = valPath + ".unr";
+            File file = new File(pathunr);
+            if (file.exists())
+            {
+                Object unr = Utils.loadSerializable(pathunr);
+                if (unr!=null && unr instanceof LinkList){
+                    LinkList<EditActionEntity> unRevertActionPool = (LinkList) unr;
+                    action.setUnRevertActionPool(unRevertActionPool);
+                }
+                file.delete();
+            }
         }
     }
 }

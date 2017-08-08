@@ -1,22 +1,20 @@
 package com.meng.hui.android.xiezuo.util;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.meng.hui.android.xiezuo.entity.BookEntity;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 
 /**
  * Created by mzk10 on 2017/7/21.
@@ -230,11 +228,31 @@ public class Utils {
         }catch (Exception e)
         {
             e.printStackTrace();
+        }finally
+        {
+            if (ois!=null)
+            {
+                try {
+                    ois.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fis!=null)
+            {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }
 
-
-
+    public static void showToast(Context context, String str)
+    {
+        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+    }
 
 }

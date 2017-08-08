@@ -5,24 +5,26 @@
               android:orientation="vertical"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/booklist_item_bg"
         android:orientation="vertical"
         android:layout_margin="2dip"
         android:paddingStart="10dip"
-        android:gravity="center_vertical"
+        android:paddingEnd="10dip"
         >
 
         <TextView
             android:id="@+id/tv_vollist_item_volname"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
+            android:text="阿斯利康当继父"
             android:textSize="18sp"
+            android:layout_centerVertical="true"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

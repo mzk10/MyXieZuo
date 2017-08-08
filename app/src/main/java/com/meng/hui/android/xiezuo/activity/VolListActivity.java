@@ -46,6 +46,7 @@ public class VolListActivity extends MyActivity {
     private LayoutInflater inflater;
     private List<VolEntity> vollist;
     private SparseArray<View.OnClickListener> listenerMap;
+    private SparseArray<View.OnLongClickListener> longlistenerMap;
     private MyAdapter vollist_adapter;
     private MyComparator vollist_comparator;
 
@@ -72,6 +73,7 @@ public class VolListActivity extends MyActivity {
         inflater = LayoutInflater.from(this);
         vollist = new ArrayList<>();
         listenerMap = new SparseArray<>();
+        longlistenerMap = new SparseArray<>();
         vollist_adapter = new MyAdapter();
 
         vollist_comparator = new MyComparator();
@@ -82,6 +84,7 @@ public class VolListActivity extends MyActivity {
     private void refrashVolListView() {
         vollist.clear();
         listenerMap.clear();
+        longlistenerMap.clear();
         loadVollist();
         vollist_adapter.notifyDataSetChanged();
     }
@@ -195,18 +198,18 @@ public class VolListActivity extends MyActivity {
         }
 
         @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
+        public View getView(int position, View view, ViewGroup viewGroup) {
             if (view == null) {
                 view = inflater.inflate(R.layout.layout_vollist_item, null);
                 Holder holder = new Holder();
                 holder.volname = view.findViewById(R.id.tv_vollist_item_volname);
                 view.setTag(holder);
             }
-            final VolEntity item = getItem(i);
+            final VolEntity item = getItem(position);
             Holder holder = (Holder) view.getTag();
             holder.volname.setText(item.getValName());
 
-            View.OnClickListener listener = listenerMap.get(i);
+            View.OnClickListener listener = listenerMap.get(position);
             if (listener == null) {
                 listener = new View.OnClickListener() {
                     @Override
@@ -215,12 +218,41 @@ public class VolListActivity extends MyActivity {
                         Intent intent = new Intent(VolListActivity.this, VolEditActivity.class);
                         intent.putExtra("valPath", valPath);
                         startActivity(intent);
-                        //TODO 未完成
                     }
                 };
-                listenerMap.put(i, listener);
+                listenerMap.put(position, listener);
             }
-            view.setOnClickListener(listenerMap.get(i));
+            view.setOnClickListener(listener);
+
+            View.OnLongClickListener longListener = longlistenerMap.get(position);
+            if (longListener == null)
+            {
+                longListener = new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        MakeDialogUtil.showMenuDialog(VolListActivity.this, new String[]{"删除章节", "取消"}, new MakeDialogUtil.OnMenuCallBack() {
+                            @Override
+                            public void onCallBack(int i) {
+                                if (i == 0)
+                                {
+                                    //TODO 删除
+                                    Utils.showToast(VolListActivity.this, "删除"+item.getValName());
+                                    File file = new File(item.getValPath());
+                                    if (file.exists())
+                                    file.delete();
+                                    File filebak = new File(item.getValPath()+".bak");
+                                    if (filebak.exists())
+                                    filebak.delete();
+                                    refrashVolListView();
+                                }
+                            }
+                        });
+                        return true;
+                    }
+                };
+                longlistenerMap.put(position, longListener);
+            }
+            view.setOnLongClickListener(longListener);
             return view;
         }
     }
