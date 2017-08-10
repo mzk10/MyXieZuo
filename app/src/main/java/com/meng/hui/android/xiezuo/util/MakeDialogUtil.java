@@ -13,9 +13,6 @@ import android.widget.TextView;
 
 import com.meng.hui.android.xiezuo.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by mzk10 on 2017/7/20.
  */
@@ -43,7 +40,7 @@ public class MakeDialogUtil {
         final Dialog tmpdialog = buildFullDialog(activity);
         tmpdialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         tmpdialog.setCancelable(true);
-        LinearLayout ll_inputdialog = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.layout_inputdialog, null);
+        LinearLayout ll_inputdialog = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.layout_dialog_input, null);
         TextView tv_inputdialog_title = ll_inputdialog.findViewById(R.id.tv_inputdialog_title);
         final EditText et_inputdialog_content = ll_inputdialog.findViewById(R.id.et_inputdialog_content);
         View btn_inputdialog_confirm = ll_inputdialog.findViewById(R.id.btn_inputdialog_confirm);
@@ -79,7 +76,7 @@ public class MakeDialogUtil {
             return;
         final Dialog dialog = buildFullDialog(activity);
         LayoutInflater inflater = LayoutInflater.from(activity);
-        View menu = inflater.inflate(R.layout.layout_menudialog, null);
+        View menu = inflater.inflate(R.layout.layout_dialog_menu, null);
         LinearLayout ll_menu_box = menu.findViewById(R.id.ll_menu_box);
         for (int i = 0; i < param.length; i++)
         {
@@ -106,5 +103,90 @@ public class MakeDialogUtil {
     {
         public void onCallBack(int i);
     }
+
+    /**
+     * 确认取消Dialog
+     * @param activity
+     * @param title
+     *            Dialog标题文字，如果为空，则默认是”确定要这么做吗？“
+     * @param confirmText
+     *            Dialog左侧按钮文字 ，如果为空，则默认是”确定“
+     * @param cancelText
+     *            Dialog右侧按钮文字，如果为空则，默认是”取消“
+     * @param linsener
+     *            如果为空，则只显示一个左侧按钮并且不执行任何动作
+     * @param showContent
+     *            是否显示中间的列表
+     * @param content
+     *            如果显示列表，则需要传入中间列表的数据
+     */
+    public static void showConfirmDialog(Activity activity, String title, String confirmText, String cancelText, final OnDialogConfirmLinsener linsener, boolean showContent,
+                                         String... content) {
+        final Dialog dialog = buildFullDialog(activity);
+        View view = LayoutInflater.from(activity).inflate(R.layout.layout_dialog_confirm, null);
+
+        TextView tv_title = (TextView) view.findViewById(R.id.tv_dialog_title);
+        Button btn_confirm = (Button) view.findViewById(R.id.btn_dialog_confirm);
+        Button btn_cancel = (Button) view.findViewById(R.id.btn_dialog_cancel);
+
+        LinearLayout ll_content = (LinearLayout) view.findViewById(R.id.ll_dialog_content);
+
+        if (showContent) {
+            ll_content.setVisibility(View.VISIBLE);
+            if (content != null) {
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                for (int i = 0; i < content.length; i++) {
+                    TextView tv = new TextView(activity);
+                    tv.setLayoutParams(params);
+                    tv.setGravity(Gravity.CENTER);
+                    tv.setTextColor(0xff000000);
+                    tv.setTextSize(14);
+                    tv.setText(content[i]);
+                    ll_content.addView(tv);
+                }
+            }
+        }
+
+        if (title != null) {
+            tv_title.setText(title);
+        }
+        if (confirmText != null) {
+            btn_confirm.setText(confirmText);
+        }
+
+        if (cancelText != null) {
+            btn_cancel.setText(cancelText);
+        }
+
+        if (linsener == null) {
+            btn_cancel.setVisibility(View.GONE);
+        }
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (linsener != null) {
+                    linsener.onConfirm(true);
+                }
+                dialog.cancel();
+            }
+        });
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (linsener != null) {
+                    linsener.onConfirm(false);
+                }
+                dialog.cancel();
+            }
+        });
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    public static interface OnDialogConfirmLinsener {
+        public void onConfirm(boolean isConfirm);
+    }
+
+
 
 }

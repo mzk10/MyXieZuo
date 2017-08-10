@@ -14,13 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.meng.hui.android.xiezuo.R;
+import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.EditActionEntity;
 import com.meng.hui.android.xiezuo.entity.VolActionEntity;
 import com.meng.hui.android.xiezuo.util.AsyncTaskBeta;
 import com.meng.hui.android.xiezuo.util.LinkList;
 import com.meng.hui.android.xiezuo.util.Utils;
-import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 
 import java.io.File;
 
@@ -41,9 +41,6 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
 
     private String valPath;
     private VolActionEntity action;
-//    private LinkList<EditActionEntity> revertActionPool;
-//    private LinkList<EditActionEntity> unRevertActionPool;
-
 
     @Override
     public void initView() {
@@ -60,8 +57,8 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     @Override
     public void initData() {
         valPath = getIntent().getStringExtra("valPath");
-        Typeface tp = Typeface.createFromAsset(getAssets(), "yh.ttf");
-        et_voledit_content.setTypeface(tp);
+//        Typeface tp = Typeface.createFromAsset(getAssets(), "yh.ttf");
+//        et_voledit_content.setTypeface(tp);
 
         btn_voledit_back.setOnClickListener(this);
         btn_voledit_copy.setOnClickListener(this);
@@ -303,11 +300,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             protected Void doInBackground(Void... param) {
                 int selectionStart = Selection.getSelectionStart(et_voledit_content.getText());
                 action.setLine(selectionStart);
-                Utils.saveSerializable(action, valPath+".bak");
-                /*{
-                    Utils.saveSerializable(revertActionPool, valPath+".rev");
-                    Utils.saveSerializable(unRevertActionPool, valPath+".unr");
-                }*/
+                Utils.saveSerializable(action, valPath + Constants.VOLACTION_EXT_NAME);
                 return null;
             }
         };
@@ -319,7 +312,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
      */
     private void loadRevertAction()
     {
-        Object act = Utils.loadSerializable(valPath + ".bak");
+        Object act = Utils.loadSerializable(valPath + Constants.VOLACTION_EXT_NAME);
         if (act!=null && act instanceof VolActionEntity)
         {
             action = (VolActionEntity)act;

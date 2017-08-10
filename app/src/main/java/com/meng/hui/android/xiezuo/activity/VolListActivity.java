@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.meng.hui.android.xiezuo.R;
+import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.VolEntity;
 import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
@@ -150,7 +151,7 @@ public class VolListActivity extends MyActivity {
             @Override
             public void onCallBack(String param) {
                 if (param != null && !"".equals(param.trim())) {
-                    File volfile = new File(getExternalFilesDir(null) + BOOKLIST_DIR + bookName +"/"+ param + ".txt");
+                    File volfile = new File(getExternalFilesDir(null) + BOOKLIST_DIR + bookName +"/"+ param + Constants.VOL_EXT_NAME);
                     if (volfile.exists() && volfile.isDirectory())
                     {
                         Toast.makeText(VolListActivity.this, "章节名重复", Toast.LENGTH_SHORT).show();
@@ -235,12 +236,11 @@ public class VolListActivity extends MyActivity {
                             public void onCallBack(int i) {
                                 if (i == 0)
                                 {
-                                    //TODO 删除
                                     Utils.showToast(VolListActivity.this, "删除"+item.getValName());
                                     File file = new File(item.getValPath());
                                     if (file.exists())
                                     file.delete();
-                                    File filebak = new File(item.getValPath()+".bak");
+                                    File filebak = new File(item.getValPath()+Constants.VOLACTION_EXT_NAME);
                                     if (filebak.exists())
                                     filebak.delete();
                                     refrashVolListView();

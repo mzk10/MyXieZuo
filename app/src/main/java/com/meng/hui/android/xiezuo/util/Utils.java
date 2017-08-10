@@ -1,6 +1,8 @@
 package com.meng.hui.android.xiezuo.util;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.widget.Toast;
 
 import com.meng.hui.android.xiezuo.entity.BookEntity;
@@ -254,5 +256,44 @@ public class Utils {
     {
         Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
     }
+
+    /**
+     * 获取在Manifest文件中指定的versionName
+     * <p>
+     * {@linkplain PackageInfo#versionName}
+     *
+     * @param context
+     * @return
+     */
+    public static String getAppVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo info = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 获取在Manifest文件中指定的versionCode
+     * <p>
+     * {@linkplain PackageInfo#versionCode}
+     *
+     * @param context
+     * @return
+     */
+    public static int getAppVersionCode(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo info = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 
 }
