@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack_t"
+    >
+
+        <LinearLayout
+            android:layout_width="250dip"
+		    android:layout_height="wrap_content"
+            android:orientation="vertical" 
+            android:background="@drawable/edit_bg"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="5dip"
+            >
+			
+            <RelativeLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:padding="5dip"
+                >
+                
+                <ImageView 
+                    android:id="@+id/progress_content"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/progress_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    />
+                
+                <ImageView 
+                    android:id="@+id/progress_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/progress_bg"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    />
+                
+            </RelativeLayout>
+            
+            <TextView 
+                    android:id="@+id/progress_int"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:paddingBottom="5dip"
+                    android:text="0%"
+                    android:textColor="@color/colorBlack"
+                    />
+            
+            <!--<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dip"
+                android:gravity="center" >
+
+                <Button
+                    android:id="@+id/btn_dialog_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_confirm"
+                    android:paddingBottom="5dip"
+                    android:paddingLeft="20dip"
+                    android:paddingRight="20dip"
+                    android:paddingTop="5dip"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/btn_cancel" />
+            </LinearLayout>-->
+        </LinearLayout>
+
+</RelativeLayout>
+
+
+
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="230dip"
+		    android:layout_height="120dip"
+            android:orientation="vertical" 
+            android:background="@drawable/dialog_bg"
+            android:gravity="center"
+            >
+			
+            <RelativeLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:padding="10dip"
+                >
+                
+                <ImageView 
+                    android:id="@+id/progress_content"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/progress_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    />
+                
+                <ImageView 
+                    android:id="@+id/progress_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/progress_bg"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    />
+                
+                <TextView 
+                    android:id="@+id/progress_int"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/progress_bg"
+                    />
+                
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <Button
+                    android:id="@+id/btn_dialog_cancel"
+                    android:layout_width="0dip"
+                    android:layout_height="40dip"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_dialog_bg"
+                    android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:text="@string/cancel" />
+            </LinearLayout>
+        </LinearLayout>
+
+</RelativeLayout> -->

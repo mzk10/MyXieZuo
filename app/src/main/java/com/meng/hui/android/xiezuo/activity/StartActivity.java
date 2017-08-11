@@ -1,8 +1,8 @@
 package com.meng.hui.android.xiezuo.activity;
 
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -15,13 +15,13 @@ import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.ResponseData;
 import com.meng.hui.android.xiezuo.entity.VersionCheckEntity;
+import com.meng.hui.android.xiezuo.util.FileUtil;
 import com.meng.hui.android.xiezuo.util.HttpHandler;
 import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.File;
 
 /**
  * Created by mzk10 on 2017/7/12.
@@ -115,23 +115,31 @@ public class StartActivity extends MyActivity {
             @Override
             public void onCallBack(ResponseData data) {
                 if (data.getCode() == 200) {
-                    VersionCheckEntity versionCheckEntity = new Gson().fromJson(data.getData(), VersionCheckEntity.class);
+                    final VersionCheckEntity versionCheckEntity = new Gson().fromJson(data.getData(), VersionCheckEntity.class);
                     int appVersionCode = Utils.getAppVersionCode(StartActivity.this);
                     int lastVersion = versionCheckEntity.getLastVersion();
                     if (appVersionCode < lastVersion) {
+                        String versionDetail = versionCheckEntity.getVersionDetail();
+                        String[] buf= null;
+                        if (versionDetail!=null && !"".equals(versionDetail))
+                        {
+                            buf = versionDetail.split(";");
+                        }
                         XiezuoDebug.i(TAG, "发现新版本，下载地址：" + versionCheckEntity.getDownloadUrl());
                         //TODO 下载
                         MakeDialogUtil.showConfirmDialog(
                                 StartActivity.this,
-                                "发现新版本，是否下载？",
-                                "当然下载",
-                                "妈的智障",
+                                "发现新版本("+versionCheckEntity.getVersionName()+")，是否下载？" +
+                                        "\n文件大小："+ FileUtil.getFileLength(versionCheckEntity.getLength()),
+                                "聪明人更新",
+                                "智障不更新",
                                 new MakeDialogUtil.OnDialogConfirmLinsener() {
                                     @Override
                                     public void onConfirm(boolean isConfirm) {
                                         if (isConfirm)
                                         {
                                             Utils.showToast(StartActivity.this, "开始下载啦！");
+                                            download(versionCheckEntity.getDownloadUrl());
                                         }else
                                         {
                                             Utils.showToast(StartActivity.this, "我就不下载！");
@@ -140,9 +148,7 @@ public class StartActivity extends MyActivity {
                                     }
                                 },
                                 true,
-                                "巴拉巴拉巴拉",
-                                "啥对方说道",
-                                "阿斯顿发送到"
+                                buf
                         );
                     } else {
                         XiezuoDebug.i(TAG, "当前版本已经是最新");
@@ -154,6 +160,52 @@ public class StartActivity extends MyActivity {
                 }
             }
         });
+    }
+
+    private void download(String url) {
+        final MakeDialogUtil.DownPreContrl ctrl = MakeDialogUtil.showDownPre(StartActivity.this);
+        AsyncTask<String, String, String> async = new AsyncTask<String, String, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                String url = strings[0];
+                File file = getExternalFilesDir(null);
+                File dir = new File(file, "app");
+                if (dir.exists() || dir.mkdirs())
+                {
+                    FileUtil.downloadFile(url, dir.getPath(), new FileUtil.OnDownloadListener() {
+                        @Override
+                        public void onDownloadComplate(final String path) {
+                            XiezuoDebug.i(TAG, "下载完成，文件保存路径：" + path);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ctrl.close();
+                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                    intent.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive");
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onDownloadPro(final int pro) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ctrl.setPro(pro);
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    Utils.showToast(StartActivity.this, "创建目录失败");
+                }
+                return null;
+            }
+        };
+        async.execute(url);
+
     }
 
     private void jumpPage() {

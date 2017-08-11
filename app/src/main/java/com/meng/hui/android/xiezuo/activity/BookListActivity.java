@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.meng.hui.android.xiezuo.R;
 import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.BookEntity;
+import com.meng.hui.android.xiezuo.util.FileUtil;
 import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
 import com.meng.hui.android.xiezuo.util.Utils;
 
@@ -81,7 +82,7 @@ public class BookListActivity extends MyActivity {
             for (File bookfile : files) {
                 if (bookfile.isDirectory())
                 {
-                    BookEntity entity = Utils.getBookDirInfo(bookfile);
+                    BookEntity entity = FileUtil.getBookDirInfo(bookfile);
                     booklist.add(entity);
                 }
             }

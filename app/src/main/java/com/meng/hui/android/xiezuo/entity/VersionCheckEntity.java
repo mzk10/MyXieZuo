@@ -3,25 +3,24 @@ package com.meng.hui.android.xiezuo.entity;
 public class VersionCheckEntity {
 
 	private int lastVersion;
+    private String versionName;
 	private String downloadUrl;
 	private int length;
+	private String versionDetail;
+
 	public int getLastVersion() {
 		return lastVersion;
-	}
-	public void setLastVersion(int lastVersion) {
-		this.lastVersion = lastVersion;
 	}
 	public String getDownloadUrl() {
 		return downloadUrl;
 	}
-	public void setDownloadUrl(String downloadUrl) {
-		this.downloadUrl = downloadUrl;
-	}
-	public int getLength() {
+    public String getVersionName() {
+        return versionName;
+    }
+    public int getLength() {
 		return length;
 	}
-	public void setLength(int length) {
-		this.length = length;
+	public String getVersionDetail() {
+		return versionDetail;
 	}
-
 }

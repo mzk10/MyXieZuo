@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +20,8 @@ import com.meng.hui.android.xiezuo.R;
  */
 
 public class MakeDialogUtil {
+
+    public static final String TAG = "MakeDialogUtil";
 
     private static Dialog buildFullDialog(Activity activity) {
         boolean isfullScreen = isFullScreen(activity);
@@ -121,7 +125,7 @@ public class MakeDialogUtil {
      *            如果显示列表，则需要传入中间列表的数据
      */
     public static void showConfirmDialog(Activity activity, String title, String confirmText, String cancelText, final OnDialogConfirmLinsener linsener, boolean showContent,
-                                         String... content) {
+                                         String[] content) {
         final Dialog dialog = buildFullDialog(activity);
         View view = LayoutInflater.from(activity).inflate(R.layout.layout_dialog_confirm, null);
 
@@ -187,6 +191,44 @@ public class MakeDialogUtil {
         public void onConfirm(boolean isConfirm);
     }
 
+
+    public static DownPreContrl showDownPre(Activity activity) {
+        final Dialog downDialog = buildFullDialog(activity);
+
+        View dialogView = LayoutInflater.from(activity).inflate(R.layout.layout_dialog_download, null);
+        final ImageView progress_dialog_content = dialogView.findViewById(R.id.progress_content);
+        final ImageView progress_dialog_bg = dialogView.findViewById(R.id.progress_bg);
+        final TextView progress_dialog_int = dialogView.findViewById(R.id.progress_int);
+        downDialog.setContentView(dialogView);
+
+        DownPreContrl ctrl = new DownPreContrl() {
+            @Override
+            public void setPro(int pro) {
+                int width = progress_dialog_bg.getWidth();
+                float v = (float) width / 100f;
+                float width_pro = v * pro;
+                XiezuoDebug.i(TAG, "容器宽:"+width + " ; 容器1%:"+v + " ; 进度条宽:"+width_pro);
+                ViewGroup.LayoutParams layoutParams = progress_dialog_content.getLayoutParams();
+                layoutParams.width = (int) width_pro;
+                progress_dialog_content.setLayoutParams(layoutParams);
+                progress_dialog_int.setText(pro+"%");
+            }
+
+            @Override
+            public void close() {
+                downDialog.cancel();
+            }
+        };
+
+        downDialog.show();
+        return ctrl;
+    }
+
+    public interface DownPreContrl
+    {
+        public void setPro(int pro);
+        public void close();
+    }
 
 
 }

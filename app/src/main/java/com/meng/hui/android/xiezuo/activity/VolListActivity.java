@@ -16,6 +16,7 @@ import com.meng.hui.android.xiezuo.R;
 import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.VolEntity;
+import com.meng.hui.android.xiezuo.util.FileUtil;
 import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
@@ -101,7 +102,7 @@ public class VolListActivity extends MyActivity {
             @Override
             public boolean accept(File file) {
                 String name = file.getName();
-                String fileExtensionName = Utils.getFileExtensionName(name);
+                String fileExtensionName = FileUtil.getFileExtensionName(name);
                 if (!file.isDirectory() && "txt".equals(fileExtensionName)) {
                     return true;
                 } else {

@@ -118,8 +118,8 @@ public class HttpHandler extends AsyncTask<String, Integer, String>
 			HttpURLConnection conn = (HttpURLConnection) u.openConnection();
 			conn.setDoOutput(true);
 			conn.setDoInput(true);
-			conn.setConnectTimeout(5000);
-			conn.setReadTimeout(10000);
+			conn.setConnectTimeout(2000);
+			conn.setReadTimeout(5000);
 			conn.connect();
 			XiezuoDebug.v(TAG, "请求方式为=" + conn.getRequestMethod());
 			if (subvalue != null && !"".equals(subvalue))

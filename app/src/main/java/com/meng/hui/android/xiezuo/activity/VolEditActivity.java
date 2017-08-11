@@ -19,6 +19,7 @@ import com.meng.hui.android.xiezuo.core.MyActivity;
 import com.meng.hui.android.xiezuo.entity.EditActionEntity;
 import com.meng.hui.android.xiezuo.entity.VolActionEntity;
 import com.meng.hui.android.xiezuo.util.AsyncTaskBeta;
+import com.meng.hui.android.xiezuo.util.FileUtil;
 import com.meng.hui.android.xiezuo.util.LinkList;
 import com.meng.hui.android.xiezuo.util.Utils;
 
@@ -57,8 +58,8 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     @Override
     public void initData() {
         valPath = getIntent().getStringExtra("valPath");
-//        Typeface tp = Typeface.createFromAsset(getAssets(), "yh.ttf");
-//        et_voledit_content.setTypeface(tp);
+        Typeface tp = Typeface.createFromAsset(getAssets(), "yh.ttf");
+        et_voledit_content.setTypeface(tp);
 
         btn_voledit_back.setOnClickListener(this);
         btn_voledit_copy.setOnClickListener(this);
@@ -71,7 +72,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         flushRevertState();
 
         File file = new File(valPath);
-        String valContent = Utils.loadFileString(file);
+        String valContent = FileUtil.loadFileString(file);
         et_voledit_content.setText(valContent);
         Selection.setSelection(et_voledit_content.getText(), action.getLine());
         flushCount(valContent);
@@ -119,7 +120,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             @Override
             protected Void doInBackground(String... param) {
                 String string = param[0];
-                Utils.saveStringToFile(string, new File(valPath));
+                FileUtil.saveStringToFile(string, new File(valPath));
                 return null;
             }
         };
@@ -300,7 +301,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             protected Void doInBackground(Void... param) {
                 int selectionStart = Selection.getSelectionStart(et_voledit_content.getText());
                 action.setLine(selectionStart);
-                Utils.saveSerializable(action, valPath + Constants.VOLACTION_EXT_NAME);
+                FileUtil.saveSerializable(action, valPath + Constants.VOLACTION_EXT_NAME);
                 return null;
             }
         };
@@ -312,7 +313,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
      */
     private void loadRevertAction()
     {
-        Object act = Utils.loadSerializable(valPath + Constants.VOLACTION_EXT_NAME);
+        Object act = FileUtil.loadSerializable(valPath + Constants.VOLACTION_EXT_NAME);
         if (act!=null && act instanceof VolActionEntity)
         {
             action = (VolActionEntity)act;
@@ -324,7 +325,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             String pathrev = valPath + ".rev";
             File file = new File(pathrev);
             if (file.exists()) {
-                Object rev = Utils.loadSerializable(pathrev);
+                Object rev = FileUtil.loadSerializable(pathrev);
                 if (rev != null && rev instanceof LinkList) {
                     LinkList<EditActionEntity> revertActionPool = (LinkList) rev;
                     action.setRevertActionPool(revertActionPool);
@@ -337,7 +338,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             File file = new File(pathunr);
             if (file.exists())
             {
-                Object unr = Utils.loadSerializable(pathunr);
+                Object unr = FileUtil.loadSerializable(pathunr);
                 if (unr!=null && unr instanceof LinkList){
                     LinkList<EditActionEntity> unRevertActionPool = (LinkList) unr;
                     action.setUnRevertActionPool(unRevertActionPool);
