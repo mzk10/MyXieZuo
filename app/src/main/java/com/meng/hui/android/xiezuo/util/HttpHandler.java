@@ -182,15 +182,16 @@ public class HttpHandler extends AsyncTask<String, Integer, String>
 		{
             try
             {
+				XiezuoDebug.i(TAG, result);
                 JSONObject resuobj = new JSONObject(result);
                 int code = resuobj.getInt("code");
                 String info = resuobj.getString("info");
-                String data = resuobj.getString("data");
+                String data = resuobj.optString("data");
                 ResponseData responseData = new ResponseData(code, info, data);
                 callBack.onCallBack(responseData);
             }catch(Exception e)
             {
-                XiezuoDebug.e(TAG, "", e);
+                XiezuoDebug.e(TAG, e.getMessage(), e);
                 callBack.onCallBack(new ResponseData(101, "解析错误", null));
             }
         }else

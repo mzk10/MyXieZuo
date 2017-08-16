@@ -1,7 +1,9 @@
 package com.meng.hui.android.xiezuo.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Environment;
 import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.Selection;
@@ -16,14 +18,18 @@ import android.widget.Toast;
 import com.meng.hui.android.xiezuo.R;
 import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
+import com.meng.hui.android.xiezuo.core.database.FontDao;
 import com.meng.hui.android.xiezuo.entity.EditActionEntity;
+import com.meng.hui.android.xiezuo.entity.FontEntity;
 import com.meng.hui.android.xiezuo.entity.VolActionEntity;
 import com.meng.hui.android.xiezuo.util.AsyncTaskBeta;
 import com.meng.hui.android.xiezuo.util.FileUtil;
 import com.meng.hui.android.xiezuo.util.LinkList;
 import com.meng.hui.android.xiezuo.util.Utils;
+import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 
 import java.io.File;
+import java.lang.reflect.Type;
 
 /**
  * Created by mzk10 on 2017/7/26.
@@ -42,6 +48,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
 
     private String valPath;
     private VolActionEntity action;
+    private SharedPreferences config;
 
     @Override
     public void initView() {
@@ -58,8 +65,30 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     @Override
     public void initData() {
         valPath = getIntent().getStringExtra("valPath");
-        Typeface tp = Typeface.createFromAsset(getAssets(), "yh.ttf");
-        et_voledit_content.setTypeface(tp);
+
+        File externalFilesDir = getExternalFilesDir(null);
+        this.config = getSharedPreferences("config", MODE_PRIVATE);
+        int fontSize = this.config.getInt("fontSize", -1);
+        int selectFont = config.getInt("selectFont", 0);
+        if (selectFont!=0)
+        {
+            FontDao dao = new FontDao(VolEditActivity.this);
+            FontEntity entity = dao.selectData(selectFont);
+            String path = entity.getPath();
+            String fname = Utils.getFilenameFromUrl(path);
+            File ttf = new File(externalFilesDir + Constants.path.FONT_DIR, fname);
+            if (ttf.exists())
+            {
+                XiezuoDebug.i(TAG, "使用字体：" + entity.getName());
+                Typeface fromFile = Typeface.createFromFile(ttf);
+                et_voledit_content.setTypeface(fromFile);
+            }
+        }else
+        {
+            XiezuoDebug.i(TAG, "使用默认字体");
+        }
+
+        et_voledit_content.setTextSize(fontSize);
 
         btn_voledit_back.setOnClickListener(this);
         btn_voledit_copy.setOnClickListener(this);

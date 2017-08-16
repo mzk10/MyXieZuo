@@ -1,5 +1,7 @@
 package com.meng.hui.android.xiezuo.util;
 
+import android.os.AsyncTask;
+
 import com.meng.hui.android.xiezuo.entity.BookEntity;
 
 import java.io.File;
@@ -230,64 +232,84 @@ public class FileUtil {
         return result;
     }
 
-    public static void downloadFile(String url, String dir, OnDownloadListener listener)
+
+    public static void downloadFile(String url, String dir, final OnDownloadListener listener)
     {
-        InputStream is = null;
-        FileOutputStream fos = null;
-        String name = url.substring(url.lastIndexOf("/", url.length()));
-        try {
-            File file_dir = new File(dir);
-            if (file_dir.exists() || file_dir.mkdirs())
-            {
-                URL u = new URL(url);
-                URLConnection conn = u.openConnection();
-                is = conn.getInputStream();
-                File file = new File(file_dir, name);
-                fos = new FileOutputStream(file);
-                int contentLength = conn.getContentLength();
-                XiezuoDebug.i(TAG, "contentLength=" + contentLength);
-                byte[] buffer = new byte[1024];
-                int len;
-                int pro = 0;
-                int leijilen = 0;
-                listener.onDownloadPro(pro);
-                while((len = is.read(buffer))!=-1)
-                {
-                    leijilen += len;
-                    fos.write(buffer, 0, len);
-                    float res = (float)leijilen / (float)contentLength * 100f;
-                    if ((int)res > pro)
+        AsyncTask<String, Integer, String> async = new AsyncTask<String, Integer, String>() {
+            @Override
+            protected String doInBackground(String... strings) {
+                String url = strings[0];
+                String dir = strings[1];
+                XiezuoDebug.i(TAG, "开始下载 url=" + url + " dir=" + dir);
+                InputStream is = null;
+                FileOutputStream fos = null;
+                String name = url.substring(url.lastIndexOf("/", url.length()));
+                try {
+                    File file_dir = new File(dir);
+                    if (file_dir.exists() || file_dir.mkdirs())
                     {
-                        pro = (int)res;
-                        listener.onDownloadPro(pro);
-                        XiezuoDebug.i(TAG, "百分比:"+pro);
+                        URL u = new URL(url);
+                        URLConnection conn = u.openConnection();
+                        is = conn.getInputStream();
+                        File file = new File(file_dir, name);
+                        fos = new FileOutputStream(file);
+                        int contentLength = conn.getContentLength();
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        int pro = 0;
+                        int leijilen = 0;
+                        publishProgress(pro);
+                        while((len = is.read(buffer))!=-1)
+                        {
+                            leijilen += len;
+                            fos.write(buffer, 0, len);
+                            float res = (float)leijilen / (float)contentLength * 100f;
+                            if ((int)res > pro)
+                            {
+                                pro = (int)res;
+                                publishProgress(pro);
+                            }
+                        }
+                        fos.flush();
+                        return file.getPath();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }finally
+                {
+                    if (fos!=null)
+                    {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (is!=null)
+                    {
+                        try {
+                            is.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-                fos.flush();
-                listener.onDownloadComplate(file.getPath());
+                return null;
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally
-        {
-            if (fos!=null)
-            {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            @Override
+            protected void onPostExecute(String s) {
+                listener.onDownloadComplate(s);
             }
-            if (is!=null)
-            {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                listener.onDownloadPro(values[0]);
             }
-        }
+        };
+
+        async.execute(url, dir);
+
     }
 
     public interface OnDownloadListener

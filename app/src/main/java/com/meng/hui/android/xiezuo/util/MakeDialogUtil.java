@@ -2,6 +2,7 @@ package com.meng.hui.android.xiezuo.util;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.meng.hui.android.xiezuo.R;
+import com.meng.hui.android.xiezuo.entity.FontEntity;
+
+import java.util.List;
 
 /**
  * Created by mzk10 on 2017/7/20.
@@ -23,7 +29,7 @@ public class MakeDialogUtil {
 
     public static final String TAG = "MakeDialogUtil";
 
-    private static Dialog buildFullDialog(Activity activity) {
+    public static Dialog buildFullDialog(Activity activity) {
         boolean isfullScreen = isFullScreen(activity);
         Dialog dialog = null;
         if (isfullScreen) {
@@ -40,16 +46,27 @@ public class MakeDialogUtil {
         return ((activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0);
     }
 
-    public static void showInputDialog(Activity activity, String title, String defs, String Hints, final OnInputCallBack callBack) {
+    public static void showInputDialog(Activity activity, String title, String defs, String Hints, int inputType, final OnInputCallBack callBack) {
         final Dialog tmpdialog = buildFullDialog(activity);
         tmpdialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         tmpdialog.setCancelable(true);
         LinearLayout ll_inputdialog = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.layout_dialog_input, null);
         TextView tv_inputdialog_title = ll_inputdialog.findViewById(R.id.tv_inputdialog_title);
         final EditText et_inputdialog_content = ll_inputdialog.findViewById(R.id.et_inputdialog_content);
+        if (inputType != -1)
+        {
+            et_inputdialog_content.setInputType(inputType);
+        }
         View btn_inputdialog_confirm = ll_inputdialog.findViewById(R.id.btn_inputdialog_confirm);
         View btn_inputdialog_cancel = ll_inputdialog.findViewById(R.id.btn_inputdialog_cancel);
-
+        if (defs!=null)
+        {
+            et_inputdialog_content.setText(defs);
+        }
+        if (Hints!=null)
+        {
+            et_inputdialog_content.setHint(Hints);
+        }
         tv_inputdialog_title.setText(title);
         btn_inputdialog_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +84,10 @@ public class MakeDialogUtil {
         });
         tmpdialog.setContentView(ll_inputdialog);
         tmpdialog.show();
+    }
+
+    public static void showInputDialog(Activity activity, String title, String defs, String Hints, final OnInputCallBack callBack) {
+        showInputDialog(activity, title, defs, Hints, -1, callBack);
     }
 
     public interface OnInputCallBack
@@ -207,7 +228,6 @@ public class MakeDialogUtil {
                 int width = progress_dialog_bg.getWidth();
                 float v = (float) width / 100f;
                 float width_pro = v * pro;
-                XiezuoDebug.i(TAG, "容器宽:"+width + " ; 容器1%:"+v + " ; 进度条宽:"+width_pro);
                 ViewGroup.LayoutParams layoutParams = progress_dialog_content.getLayoutParams();
                 layoutParams.width = (int) width_pro;
                 progress_dialog_content.setLayoutParams(layoutParams);
@@ -229,6 +249,5 @@ public class MakeDialogUtil {
         public void setPro(int pro);
         public void close();
     }
-
 
 }

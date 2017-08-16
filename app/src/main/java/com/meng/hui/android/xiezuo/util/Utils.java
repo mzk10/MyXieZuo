@@ -96,5 +96,12 @@ public class Utils {
     }
 
 
+    public static String getFilenameFromUrl(String url)
+    {
+        String name = url.substring(url.lastIndexOf("/")+1, url.length());
+        return name;
+    }
+
+
 
 }

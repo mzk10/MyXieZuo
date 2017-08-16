@@ -13,6 +13,8 @@ import com.google.gson.Gson;
 import com.meng.hui.android.xiezuo.R;
 import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
+import com.meng.hui.android.xiezuo.core.database.FontDao;
+import com.meng.hui.android.xiezuo.entity.FontEntity;
 import com.meng.hui.android.xiezuo.entity.ResponseData;
 import com.meng.hui.android.xiezuo.entity.VersionCheckEntity;
 import com.meng.hui.android.xiezuo.util.FileUtil;
@@ -21,7 +23,13 @@ import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mzk10 on 2017/7/12.
@@ -143,7 +151,7 @@ public class StartActivity extends MyActivity {
                                         }else
                                         {
                                             Utils.showToast(StartActivity.this, "我就不下载！");
-                                            jumpPage();
+                                            updateFontList();
                                         }
                                     }
                                 },
@@ -152,11 +160,11 @@ public class StartActivity extends MyActivity {
                         );
                     } else {
                         XiezuoDebug.i(TAG, "当前版本已经是最新");
-                        jumpPage();
+                        updateFontList();
                     }
                 } else {
                     XiezuoDebug.i(TAG, data.getInfo());
-                    jumpPage();
+                    updateFontList();
                 }
             }
         });
@@ -164,51 +172,81 @@ public class StartActivity extends MyActivity {
 
     private void download(String url) {
         final MakeDialogUtil.DownPreContrl ctrl = MakeDialogUtil.showDownPre(StartActivity.this);
-        AsyncTask<String, String, String> async = new AsyncTask<String, String, String>() {
-            @Override
-            protected String doInBackground(String... strings) {
-                String url = strings[0];
-                File file = getExternalFilesDir(null);
-                File dir = new File(file, "app");
-                if (dir.exists() || dir.mkdirs())
-                {
-                    FileUtil.downloadFile(url, dir.getPath(), new FileUtil.OnDownloadListener() {
+        File file = getExternalFilesDir(null);
+        File dir = new File(file, "app");
+        if (dir.exists() || dir.mkdirs())
+        {
+            FileUtil.downloadFile(url, dir.getPath(), new FileUtil.OnDownloadListener() {
+                @Override
+                public void onDownloadComplate(final String path) {
+                    XiezuoDebug.i(TAG, "下载完成，文件保存路径：" + path);
+                    runOnUiThread(new Runnable() {
                         @Override
-                        public void onDownloadComplate(final String path) {
-                            XiezuoDebug.i(TAG, "下载完成，文件保存路径：" + path);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ctrl.close();
-                                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                                    intent.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive");
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onDownloadPro(final int pro) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ctrl.setPro(pro);
-                                }
-                            });
+                        public void run() {
+                            ctrl.close();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive");
+                            startActivity(intent);
+                            finish();
                         }
                     });
-                }else{
-                    Utils.showToast(StartActivity.this, "创建目录失败");
                 }
-                return null;
-            }
-        };
-        async.execute(url);
+
+                @Override
+                public void onDownloadPro(final int pro) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ctrl.setPro(pro);
+                        }
+                    });
+                }
+            });
+        }else{
+            Utils.showToast(StartActivity.this, "创建目录失败");
+        }
 
     }
 
-    private void jumpPage() {
+
+    private void updateFontList()
+    {
+        HttpHandler handler = new HttpHandler(Constants.url.URL_FONTLIST, this);
+        handler.request(new HttpHandler.HttpCallBack() {
+            @Override
+            public void onCallBack(ResponseData data) {
+                if (data.getCode() == 200){
+                    try {
+                        JSONArray array = new JSONArray(data.getData());
+                        FontDao dao = new FontDao(StartActivity.this);
+                        for (int i = 0; i<array.length(); i++)
+                        {
+                            FontEntity entity = new FontEntity();
+                            JSONObject obj = array.getJSONObject(i);
+                            entity.setId(obj.getInt("id"));
+                            entity.setName(obj.getString("name"));
+                            entity.setPath(obj.getString("path"));
+                            FontEntity result = dao.selectData(entity.getId());
+                            if (result == null)
+                            {
+                                XiezuoDebug.i(TAG, "无此记录，添加");
+                                dao.addData(entity);
+                            }else{
+                                XiezuoDebug.i(TAG, "已经有此记录，不添加");
+                            }
+                        }
+                        dao.closeDB();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                jump();
+            }
+        });
+    }
+
+    private void jump()
+    {
         Intent intent = new Intent(StartActivity.this, BookListActivity.class);
         startActivity(intent);
         finish();
