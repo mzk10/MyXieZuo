@@ -51,8 +51,8 @@ public class MakeDialogUtil {
         tmpdialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         tmpdialog.setCancelable(true);
         LinearLayout ll_inputdialog = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.layout_dialog_input, null);
-        TextView tv_inputdialog_title = ll_inputdialog.findViewById(R.id.tv_inputdialog_title);
-        final EditText et_inputdialog_content = ll_inputdialog.findViewById(R.id.et_inputdialog_content);
+        TextView tv_inputdialog_title = (TextView) ll_inputdialog.findViewById(R.id.tv_inputdialog_title);
+        final EditText et_inputdialog_content = (EditText) ll_inputdialog.findViewById(R.id.et_inputdialog_content);
         if (inputType != -1)
         {
             et_inputdialog_content.setInputType(inputType);
@@ -102,11 +102,11 @@ public class MakeDialogUtil {
         final Dialog dialog = buildFullDialog(activity);
         LayoutInflater inflater = LayoutInflater.from(activity);
         View menu = inflater.inflate(R.layout.layout_dialog_menu, null);
-        LinearLayout ll_menu_box = menu.findViewById(R.id.ll_menu_box);
+        LinearLayout ll_menu_box = (LinearLayout) menu.findViewById(R.id.ll_menu_box);
         for (int i = 0; i < param.length; i++)
         {
             View item = inflater.inflate(R.layout.layout_menu_item, null);
-            Button btn = item.findViewById(R.id.btn_menu_item);
+            Button btn = (Button) item.findViewById(R.id.btn_menu_item);
             btn.setText(param[i]);
             final int j = i;
             btn.setOnClickListener(new View.OnClickListener() {
@@ -217,9 +217,9 @@ public class MakeDialogUtil {
         final Dialog downDialog = buildFullDialog(activity);
 
         View dialogView = LayoutInflater.from(activity).inflate(R.layout.layout_dialog_download, null);
-        final ImageView progress_dialog_content = dialogView.findViewById(R.id.progress_content);
-        final ImageView progress_dialog_bg = dialogView.findViewById(R.id.progress_bg);
-        final TextView progress_dialog_int = dialogView.findViewById(R.id.progress_int);
+        final ImageView progress_dialog_content = (ImageView) dialogView.findViewById(R.id.progress_content);
+        final ImageView progress_dialog_bg = (ImageView) dialogView.findViewById(R.id.progress_bg);
+        final TextView progress_dialog_int = (TextView) dialogView.findViewById(R.id.progress_int);
         downDialog.setContentView(dialogView);
 
         DownPreContrl ctrl = new DownPreContrl() {

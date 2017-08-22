@@ -129,6 +129,16 @@ public class FileUtil {
     }
 
     /**
+     * 通过url获取文件名
+     * @param url
+     * @return
+     */
+    public static String getFilenameFromUrl(String url) {
+        String substring = url.substring(url.lastIndexOf("/")+1, url.length());
+        return substring;
+    }
+
+    /**
      * 从文件读取文本内容
      *
      * @param file
@@ -274,7 +284,7 @@ public class FileUtil {
                         return file.getPath();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    XiezuoDebug.e(TAG, e.getMessage(),e);
                 }finally
                 {
                     if (fos!=null)

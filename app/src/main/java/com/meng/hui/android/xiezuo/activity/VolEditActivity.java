@@ -3,7 +3,6 @@ package com.meng.hui.android.xiezuo.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.Environment;
 import android.text.ClipboardManager;
 import android.text.Editable;
 import android.text.Selection;
@@ -29,7 +28,6 @@ import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 
 import java.io.File;
-import java.lang.reflect.Type;
 
 /**
  * Created by mzk10 on 2017/7/26.
@@ -39,6 +37,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
 
     private static final String TAG = "VolEditActivity";
 
+    private View background;
     private EditText et_voledit_content;
     private ImageButton btn_voledit_back;
     private ImageButton btn_voledit_copy;
@@ -53,13 +52,13 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     @Override
     public void initView() {
         setContentView(R.layout.activity_voledit);
-
-        btn_voledit_back=findViewById(R.id.btn_voledit_back);
-        btn_voledit_copy = findViewById(R.id.btn_voledit_copy);
-        btn_voledit_revert=findViewById(R.id.btn_voledit_revert);
-        btn_voledit_unrevert =findViewById(R.id.btn_voledit_unrevert);
-        et_voledit_content = findViewById(R.id.et_voledit_content);
-        tv_voledit_count = findViewById(R.id.tv_voledit_count);
+        background = findViewById(R.id.background);
+        btn_voledit_back= (ImageButton) findViewById(R.id.btn_voledit_back);
+        btn_voledit_copy = (ImageButton) findViewById(R.id.btn_voledit_copy);
+        btn_voledit_revert= (ImageButton) findViewById(R.id.btn_voledit_revert);
+        btn_voledit_unrevert = (ImageButton) findViewById(R.id.btn_voledit_unrevert);
+        et_voledit_content = (EditText) findViewById(R.id.et_voledit_content);
+        tv_voledit_count = (TextView) findViewById(R.id.tv_voledit_count);
     }
 
     @Override
@@ -68,6 +67,17 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
 
         File externalFilesDir = getExternalFilesDir(null);
         this.config = getSharedPreferences("config", MODE_PRIVATE);
+        int editbg = config.getInt("editbg", 1);
+        if (editbg == 1)
+        {
+            background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_black, null));
+            et_voledit_content.setTextColor(getResources().getColor(R.color.colorGray, null));
+        }else if (editbg == 2)
+        {
+            background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_white, null));
+            et_voledit_content.setTextColor(getResources().getColor(R.color.colorBlack, null));
+        }
+
         int fontSize = this.config.getInt("fontSize", -1);
         int selectFont = config.getInt("selectFont", 0);
         if (selectFont!=0)

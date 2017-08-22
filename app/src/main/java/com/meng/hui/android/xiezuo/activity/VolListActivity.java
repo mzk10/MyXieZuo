@@ -57,11 +57,11 @@ public class VolListActivity extends MyActivity {
 
         setContentView(R.layout.activity_vollist);
 
-        action_bar_btn_back = findViewById(R.id.action_bar_btn_back);
-        action_bar_btn_menu = findViewById(R.id.action_bar_btn_menu);
-        action_bar_tv_title = findViewById(R.id.action_bar_tv_title);
-        lv_booklist = findViewById(R.id.lv_vollist);
-        btn_add = findViewById(R.id.btn_add);
+        action_bar_btn_back = (Button) findViewById(R.id.action_bar_btn_back);
+        action_bar_btn_menu = (Button) findViewById(R.id.action_bar_btn_menu);
+        action_bar_tv_title = (TextView) findViewById(R.id.action_bar_tv_title);
+        lv_booklist = (ListView) findViewById(R.id.lv_vollist);
+        btn_add = (Button) findViewById(R.id.btn_add);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class VolListActivity extends MyActivity {
             public void onCallBack(String param) {
                 if (param != null && !"".equals(param.trim())) {
                     File volfile = new File(getExternalFilesDir(null) + BOOKLIST_DIR + bookName +"/"+ param + Constants.VOL_EXT_NAME);
-                    if (volfile.exists() && volfile.isDirectory())
+                    if (volfile.exists() && !volfile.isDirectory())
                     {
                         Toast.makeText(VolListActivity.this, "章节名重复", Toast.LENGTH_SHORT).show();
                     }else
@@ -204,7 +204,7 @@ public class VolListActivity extends MyActivity {
             if (view == null) {
                 view = inflater.inflate(R.layout.layout_vollist_item, null);
                 Holder holder = new Holder();
-                holder.volname = view.findViewById(R.id.tv_vollist_item_volname);
+                holder.volname = (TextView) view.findViewById(R.id.tv_vollist_item_volname);
                 view.setTag(holder);
             }
             final VolEntity item = getItem(position);

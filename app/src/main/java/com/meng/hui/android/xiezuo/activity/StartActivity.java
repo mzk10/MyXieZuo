@@ -2,7 +2,6 @@ package com.meng.hui.android.xiezuo.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -28,8 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mzk10 on 2017/7/12.
@@ -49,8 +46,8 @@ public class StartActivity extends MyActivity {
     @Override
     public void initView() {
         setContentView(R.layout.activity_start);
-        iv_anim_welcome_scale = findViewById(R.id.iv_anim_welcome_icon);
-        iv_anim_welcome = findViewById(R.id.iv_anim_welcome);
+        iv_anim_welcome_scale = (ImageView) findViewById(R.id.iv_anim_welcome_icon);
+        iv_anim_welcome = (ImageView) findViewById(R.id.iv_anim_welcome);
     }
 
     @Override
@@ -184,10 +181,7 @@ public class StartActivity extends MyActivity {
                         @Override
                         public void run() {
                             ctrl.close();
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive");
-                            startActivity(intent);
-                            finish();
+                            installApk(path);
                         }
                     });
                 }
@@ -208,6 +202,23 @@ public class StartActivity extends MyActivity {
 
     }
 
+    private void installApk(String path) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        Uri data;
+//        // 判断版本大于等于7.0
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            // "net.csdn.blog.ruancoder.fileprovider"即是在清单文件中配置的authorities
+//            data = FileProvider.getUriForFile(StartActivity.this, "com.meng.hui.android.xiezuo.fileProvider", new File(path));
+//            // 给目标应用一个临时授权
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        } else {
+//            data = Uri.fromFile(new File(path));
+//        }
+        Uri data = Uri.fromFile(new File(path));
+        intent.setDataAndType(data, "application/vnd.android.package-archive");
+        startActivity(intent);
+        finish();
+    }
 
     private void updateFontList()
     {
