@@ -124,8 +124,7 @@ public class FileUtil {
     public static String getFileExtensionName(String file) {
         int i = file.lastIndexOf('.');
         int leg = file.length();
-        return (i > 0 ? (i + 1) == leg ? " " : file.substring(i + 1,
-                file.length()) : " ");
+        return (i > 0 ? (i + 1) == leg ? " " : file.substring(i + 1,  file.length()) : " ");
     }
 
     /**
@@ -136,6 +135,39 @@ public class FileUtil {
     public static String getFilenameFromUrl(String url) {
         String substring = url.substring(url.lastIndexOf("/")+1, url.length());
         return substring;
+    }
+
+    /**
+     * 去掉文件扩展名
+     * @param name
+     * @return
+     */
+    public static String cutExtensionName(String name)
+    {
+        try {
+            int lastIndexOf = name.lastIndexOf(".");
+            String substring = name.substring(0, lastIndexOf);
+            return substring;
+        } catch (Exception e) {
+            return name;
+        }
+    }
+
+    /**
+     * 修改文件名（保留原扩展名）
+     * @param file
+     * @param newname
+     */
+    public static void changeFileName(File file, String newname)
+    {
+        if (file.exists())
+        {
+            String path = file.getPath();
+            String name = FileUtil.getFilenameFromUrl(path);
+            name = FileUtil.cutExtensionName(name);
+            String newpath = path.replace(name, newname);
+            file.renameTo(new File(newpath));
+        }
     }
 
     /**
@@ -168,7 +200,7 @@ public class FileUtil {
             }
             result = sb.toString();
         } catch (Exception e) {
-            XiezuoDebug.e(TAG, "", e);
+            XiezuoDebug.e(TAG, e);
         } finally {
             if (isr != null) {
                 try {
@@ -203,20 +235,20 @@ public class FileUtil {
             osw.write(string);
             osw.flush();
         } catch (Exception e) {
-            XiezuoDebug.e(TAG, "", e);
+            XiezuoDebug.e(TAG, e);
         } finally {
             if (osw != null) {
                 try {
                     osw.close();
                 } catch (IOException e) {
-                    XiezuoDebug.e(TAG, "", e);
+                    XiezuoDebug.e(TAG, e);
                 }
             }
             if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {
-                    XiezuoDebug.e(TAG, "", e);
+                    XiezuoDebug.e(TAG, e);
                 }
             }
         }
@@ -284,7 +316,7 @@ public class FileUtil {
                         return file.getPath();
                     }
                 } catch (Exception e) {
-                    XiezuoDebug.e(TAG, e.getMessage(),e);
+                    XiezuoDebug.e(TAG, e);
                 }finally
                 {
                     if (fos!=null)

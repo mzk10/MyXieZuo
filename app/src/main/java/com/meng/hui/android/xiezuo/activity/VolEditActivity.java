@@ -70,12 +70,12 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         int editbg = config.getInt("editbg", 1);
         if (editbg == 1)
         {
-            background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_black, null));
-            et_voledit_content.setTextColor(getResources().getColor(R.color.colorGray, null));
+            background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_black));
+            et_voledit_content.setTextColor(getResources().getColor(R.color.colorGray));
         }else if (editbg == 2)
         {
-            background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_white, null));
-            et_voledit_content.setTextColor(getResources().getColor(R.color.colorBlack, null));
+            background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_white));
+            et_voledit_content.setTextColor(getResources().getColor(R.color.colorBlack));
         }
 
         int fontSize = this.config.getInt("fontSize", -1);
@@ -113,10 +113,14 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         File file = new File(valPath);
         String valContent = FileUtil.loadFileString(file);
         et_voledit_content.setText(valContent);
-        Selection.setSelection(et_voledit_content.getText(), action.getLine());
+        try {
+            Selection.setSelection(et_voledit_content.getText(), action.getLine());
+        }catch (Exception e)
+        {
+            XiezuoDebug.e(TAG, e);
+        }
         flushCount(valContent);
         et_voledit_content.addTextChangedListener(this);
-
     }
 
     @Override

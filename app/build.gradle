@@ -11,8 +11,8 @@ android {
         applicationId "com.meng.hui.android.xiezuo"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 3
-        versionName "V0.2.0beta"
+        versionCode 4
+        versionName "V0.2.3beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

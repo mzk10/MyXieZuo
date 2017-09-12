@@ -170,7 +170,7 @@ public class BookListActivity extends MyActivity {
                     int i = Integer.parseInt(param);
                     config.edit().putInt("fontSize", i).commit();
                 } catch (Exception e) {
-                    XiezuoDebug.e(TAG, "", e);
+                    XiezuoDebug.e(TAG, e);
                 }
             }
         });

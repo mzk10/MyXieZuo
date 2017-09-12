@@ -141,7 +141,7 @@ public class HttpHandler extends AsyncTask<String, Integer, String>
 			return sb.toString();
 		} catch (Exception e)
 		{
-			XiezuoDebug.e(TAG, "MalformedURLException:", e);
+			XiezuoDebug.e(TAG, e);
 		}finally
 		{
 			if (isr != null)
@@ -191,7 +191,7 @@ public class HttpHandler extends AsyncTask<String, Integer, String>
                 callBack.onCallBack(responseData);
             }catch(Exception e)
             {
-                XiezuoDebug.e(TAG, e.getMessage(), e);
+                XiezuoDebug.e(TAG, e);
                 callBack.onCallBack(new ResponseData(101, "解析错误", null));
             }
         }else

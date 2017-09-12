@@ -67,7 +67,7 @@ public class VolListActivity extends MyActivity {
     @Override
     public void initData() {
         bookName = getIntent().getStringExtra("bookName");
-        action_bar_tv_title.setText("《"+bookName+"》");
+        action_bar_tv_title.setText("《" + bookName + "》");
         action_bar_btn_back.setOnClickListener(this);
         action_bar_btn_menu.setVisibility(View.INVISIBLE);
         btn_add.setOnClickListener(this);
@@ -96,7 +96,7 @@ public class VolListActivity extends MyActivity {
      * 读取总书目
      */
     private void loadVollist() {
-        String dir = getExternalFilesDir(null) + BOOKLIST_DIR + bookName +"/";
+        String dir = getExternalFilesDir(null) + BOOKLIST_DIR + bookName + "/";
         File file_dir = new File(dir);
         FileFilter filter = new FileFilter() {
             @Override
@@ -111,11 +111,9 @@ public class VolListActivity extends MyActivity {
             }
         };
         File[] volFiles = file_dir.listFiles(filter);
-        if (volFiles != null)
-        {
+        if (volFiles != null) {
             for (File volfile : volFiles) {
-                if (volfile.exists() && !volfile.isDirectory())
-                {
+                if (volfile.exists() && !volfile.isDirectory()) {
                     VolEntity entity = new VolEntity();
                     entity.setValName(volfile.getName());
                     entity.setValPath(volfile.getPath());
@@ -125,7 +123,6 @@ public class VolListActivity extends MyActivity {
             Collections.sort(vollist, vollist_comparator);
         }
     }
-
 
 
     @Override
@@ -152,20 +149,17 @@ public class VolListActivity extends MyActivity {
             @Override
             public void onCallBack(String param) {
                 if (param != null && !"".equals(param.trim())) {
-                    File volfile = new File(getExternalFilesDir(null) + BOOKLIST_DIR + bookName +"/"+ param + Constants.VOL_EXT_NAME);
-                    if (volfile.exists() && !volfile.isDirectory())
-                    {
+                    File volfile = new File(getExternalFilesDir(null) + BOOKLIST_DIR + bookName + "/" + param + Constants.VOL_EXT_NAME);
+                    if (volfile.exists() && !volfile.isDirectory()) {
                         Toast.makeText(VolListActivity.this, "章节名重复", Toast.LENGTH_SHORT).show();
-                    }else
-                    {
+                    } else {
                         FileOutputStream fos = null;
                         try {
                             fos = new FileOutputStream(volfile);
                             fos.flush();
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }finally
-                        {
+                        } finally {
                             try {
                                 fos.close();
                             } catch (Exception e) {
@@ -174,7 +168,7 @@ public class VolListActivity extends MyActivity {
                         }
                         refrashVolListView();
                     }
-                }else{
+                } else {
                     Toast.makeText(VolListActivity.this, "章节名不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -227,24 +221,35 @@ public class VolListActivity extends MyActivity {
             view.setOnClickListener(listener);
 
             View.OnLongClickListener longListener = longlistenerMap.get(position);
-            if (longListener == null)
-            {
+            if (longListener == null) {
                 longListener = new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
-                        MakeDialogUtil.showMenuDialog(VolListActivity.this, new String[]{"删除章节", "取消"}, new MakeDialogUtil.OnMenuCallBack() {
+                        MakeDialogUtil.showMenuDialog(VolListActivity.this, new String[]{"删除章节", "修改章节名称", "取消"}, new MakeDialogUtil.OnMenuCallBack() {
                             @Override
                             public void onCallBack(int i) {
-                                if (i == 0)
-                                {
-                                    Utils.showToast(VolListActivity.this, "删除"+item.getValName());
+                                if (i == 0) {
+                                    Utils.showToast(VolListActivity.this, "删除" + item.getValName());
                                     File file = new File(item.getValPath());
                                     if (file.exists())
-                                    file.delete();
-                                    File filebak = new File(item.getValPath()+Constants.VOLACTION_EXT_NAME);
+                                        file.delete();
+                                    File filebak = new File(item.getValPath() + Constants.VOLACTION_EXT_NAME);
                                     if (filebak.exists())
-                                    filebak.delete();
+                                        filebak.delete();
                                     refrashVolListView();
+                                }else if(i == 1)
+                                {
+                                    //TODO 修改章节名称
+                                    final File file = new File(item.getValPath());
+                                    final File filebak = new File(item.getValPath() + Constants.VOLACTION_EXT_NAME);
+                                    MakeDialogUtil.showInputDialog(VolListActivity.this, "请输入新的章节名", FileUtil.cutExtensionName(file.getName()), "", new MakeDialogUtil.OnInputCallBack() {
+                                        @Override
+                                        public void onCallBack(String param) {
+                                            FileUtil.changeFileName(file, param);
+                                            FileUtil.changeFileName(filebak, param + ".txt");
+                                            refrashVolListView();
+                                        }
+                                    });
                                 }
                             }
                         });
@@ -262,8 +267,7 @@ public class VolListActivity extends MyActivity {
         private TextView volname;
     }
 
-    private class MyComparator implements Comparator<VolEntity>
-    {
+    private class MyComparator implements Comparator<VolEntity> {
         @Override
         public int compare(VolEntity volEntity, VolEntity t1) {
             return 0;
