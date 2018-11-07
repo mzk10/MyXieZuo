@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dimen_1dip">1dip</dimen>
+    <dimen name="dimen_2dip">2dip</dimen>
+    <dimen name="dimen_5dip">5dip</dimen>
+    <dimen name="dimen_6dip">6dip</dimen>
+    <dimen name="dimen_10dip">10dip</dimen>
+    <dimen name="dimen_20dip">20dip</dimen>
+    <dimen name="dimen_30dip">30dip</dimen>
+    <dimen name="dimen_35dip">35dip</dimen>
+    <dimen name="dimen_44dip">44dip</dimen>
+    <dimen name="dimen_250dip">250dip</dimen>
+
+    <dimen name="font_16sp">16sp</dimen>
+    <dimen name="font_12sp">12sp</dimen>
+    <dimen name="font_18sp">18sp</dimen>
+
+</resources>

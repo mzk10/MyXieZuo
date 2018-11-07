@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tv_vollist_item_volname"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_2dip"
+    android:background="@drawable/booklist_item_bg"
+    android:paddingEnd="@dimen/dimen_10dip"
+    android:paddingStart="@dimen/dimen_10dip"
+    android:textColor="@color/colorBlack"
+    android:textSize="@dimen/font_16sp" />
+

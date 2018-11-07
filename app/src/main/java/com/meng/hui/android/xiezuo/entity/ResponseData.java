@@ -1,29 +1,32 @@
 package com.meng.hui.android.xiezuo.entity;
 
-import org.json.JSONObject;
+public class ResponseData<T> {
 
-public class ResponseData {
+    private int code;
+    private String info;
+    private T data;
 
-	public ResponseData() {}
+    public int getCode() {
+        return code;
+    }
 
-	public ResponseData(int code, String info, String data) {
-		this.code = code;
-		this.info = info;
-		this.data = data;
-	}
+    public void setCode(int code) {
+        this.code = code;
+    }
 
-	private int code;
-	private String info;
-	private String data;
-	
-	public int getCode() {
-		return code;
-	}
-	public String getInfo() {
-		return info;
-	}
-	public String getData() {
-		return data;
-	}
-	
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }

@@ -2,7 +2,6 @@ package com.meng.hui.android.xiezuo.util;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.meng.hui.android.xiezuo.R;
-import com.meng.hui.android.xiezuo.entity.FontEntity;
-
-import java.util.List;
 
 /**
  * Created by mzk10 on 2017/7/20.
@@ -50,7 +44,7 @@ public class MakeDialogUtil {
         final Dialog tmpdialog = buildFullDialog(activity);
         tmpdialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         tmpdialog.setCancelable(true);
-        LinearLayout ll_inputdialog = (LinearLayout) activity.getLayoutInflater().inflate(R.layout.layout_dialog_input, null);
+        View ll_inputdialog = activity.getLayoutInflater().inflate(R.layout.layout_dialog_input, null);
         TextView tv_inputdialog_title = (TextView) ll_inputdialog.findViewById(R.id.tv_inputdialog_title);
         final EditText et_inputdialog_content = (EditText) ll_inputdialog.findViewById(R.id.et_inputdialog_content);
         if (inputType != -1)
@@ -218,7 +212,7 @@ public class MakeDialogUtil {
 
         View dialogView = LayoutInflater.from(activity).inflate(R.layout.layout_dialog_download, null);
         final ImageView progress_dialog_content = (ImageView) dialogView.findViewById(R.id.progress_content);
-        final ImageView progress_dialog_bg = (ImageView) dialogView.findViewById(R.id.progress_bg);
+        final View progress_dialog_bg = dialogView.findViewById(R.id.progress_bg);
         final TextView progress_dialog_int = (TextView) dialogView.findViewById(R.id.progress_int);
         downDialog.setContentView(dialogView);
 
@@ -246,8 +240,8 @@ public class MakeDialogUtil {
 
     public interface DownPreContrl
     {
-        public void setPro(int pro);
-        public void close();
+        void setPro(int pro);
+        void close();
     }
 
 }

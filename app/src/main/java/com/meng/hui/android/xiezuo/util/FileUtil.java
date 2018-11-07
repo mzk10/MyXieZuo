@@ -2,7 +2,7 @@ package com.meng.hui.android.xiezuo.util;
 
 import android.os.AsyncTask;
 
-import com.meng.hui.android.xiezuo.entity.BookEntity;
+import com.meng.hui.android.xiezuo.module.book.entity.BookEntity;
 
 import java.io.File;
 import java.io.FileFilter;

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/colorBlack_t">
+
+    <LinearLayout
+        android:id="@+id/ll_menu_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dimen_20dip"
+        android:background="@drawable/edit_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_20dip"
+        >
+
+        <RadioGroup
+            android:id="@+id/rg_dialog_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_dialog_confirm"
+            style="@style/dialog_confirm_button"
+            android:text="@string/btn_confirm"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>
