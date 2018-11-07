@@ -3,6 +3,7 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <FrameLayout
@@ -48,6 +49,14 @@
                 android:padding="@dimen/dimen_5dip"
                 android:src="@drawable/btn_valedit_unrevert" />
 
+            <ImageView
+                android:id="@+id/btn_voledit_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/color_tran"
+                android:padding="@dimen/dimen_5dip"
+                android:src="@drawable/btn_valedit_setting" />
+
         </LinearLayout>
 
 
@@ -64,6 +73,33 @@
         android:orientation="vertical"
         android:padding="@dimen/dimen_5dip">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_vol_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_tran"
+                />
+            <TextView
+                android:id="@+id/tv_vol_name_maohao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_tran"
+                android:text="@string/maohao"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dip"
+            android:layout_marginBottom="@dimen/dimen_2dip"
+            android:background="@color/colorGray"
+            />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dip"
@@ -78,7 +114,6 @@
                 android:gravity="start|top"
                 android:inputType="none"
                 android:lineSpacingMultiplier="1.2" />
-
 
         </ScrollView>
 

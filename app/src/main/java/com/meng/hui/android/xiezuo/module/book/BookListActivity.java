@@ -27,6 +27,9 @@ import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 import com.meng.hui.android.xiezuo.util.database.FontDao;
+import com.meng.hui.android.xiezuo.util.pop.PopWindowUtil;
+import com.meng.hui.android.xiezuo.util.pop.holder.BaseHolder;
+import com.meng.hui.android.xiezuo.util.pop.holder.MainMenuHolder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class BookListActivity extends MyActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class BookListActivity extends MyActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, View.OnClickListener {
 
     private static final String TAG = "BookListActivity";
     @BindView(R.id.action_bar_btn_back)
@@ -49,13 +52,11 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
     ListView lv_booklist;
 
     private List<BookEntity> booklist;
-    /*private SparseArray<View.OnClickListener> listenerMap;
-    private SparseArray<View.OnLongClickListener> longlistenerMap;*/
     private BookListAdapter booklist_adapter;
     private MyComparator booklist_comparator;
 
     private SharedPreferences config;
-    private String[] menu;
+    //private String[] menu;
     private List<FontEntity> fontlist;
     private FontDao dao;
 
@@ -70,20 +71,35 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
 
     @Override
     public void initData() {
-        menu = new String[]{"更改字体大小", "更改字体", "编辑页面背景色", "取消"};
+        //menu = new String[]{"更改字体大小", "更改字体", "编辑页面背景色", "取消"};
         config = getSharedPreferences("config", MODE_PRIVATE);
         fontlist = new ArrayList<>();
         dao = new FontDao(this);
-
-        int fontSize = config.getInt("fontSize", -1);
-        if (fontSize == -1) {
-            config.edit().putInt("fontSize", 18).apply();
-        }
     }
 
     @Override
     public void setListener() {
 
+    }
+
+    @Override
+    public void startAction() {
+        action_bar_tv_title.setText(R.string.book_list);
+        action_bar_btn_back.setVisibility(View.INVISIBLE);
+
+        booklist = new ArrayList<>();
+        booklist_adapter = new BookListAdapter(booklist, getApplicationContext());
+
+        booklist_comparator = new MyComparator();
+        lv_booklist.setAdapter(booklist_adapter);
+        lv_booklist.setOnItemClickListener(this);
+        lv_booklist.setOnItemLongClickListener(this);
+        refrashBookListView();
+
+        View add = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_booklist_item_add, lv_booklist, false);
+        add.setOnClickListener(this);
+        lv_booklist.addFooterView(add);
+        booklist_adapter.notifyDataSetChanged();
     }
 
     private void refrashBookListView() {
@@ -113,22 +129,8 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
     }
 
     @Override
-    public void startAction() {
-        action_bar_tv_title.setText("小说列表");
-        action_bar_btn_back.setVisibility(View.INVISIBLE);
-        /*btn_add.setOnClickListener(this);
-        action_bar_btn_menu.setOnClickListener(this);*/
-
-        booklist = new ArrayList<>();
-        /*listenerMap = new SparseArray<>();
-        longlistenerMap = new SparseArray<>();*/
-        booklist_adapter = new BookListAdapter(booklist, getApplicationContext());
-
-        booklist_comparator = new MyComparator();
-        lv_booklist.setAdapter(booklist_adapter);
-        lv_booklist.setOnItemClickListener(this);
-        lv_booklist.setOnItemLongClickListener(this);
-        refrashBookListView();
+    public void onClick(View v) {
+        btn_add();
     }
 
     @Override
@@ -179,10 +181,74 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
     }
 
 
+    private FontEntity selectEntity;
+
+    public void showChangeFontDialog(RadioGroup.OnCheckedChangeListener listener, final View.OnClickListener onClickListener) {
+        if (fontlist == null || fontlist.size() == 0)
+            return;
+        final Dialog dialog = MakeDialogUtil.buildFullDialog(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View menu = inflater.inflate(R.layout.layout_dialog_checkbox, null);
+        final RadioGroup check = (RadioGroup) menu.findViewById(R.id.rg_dialog_check);
+        Button btn_confirm = (Button) menu.findViewById(R.id.btn_dialog_confirm);
+        check.setOnCheckedChangeListener(listener);
+        for (int i = 0; i < fontlist.size(); i++) {
+            FontEntity entity = fontlist.get(i);
+            RadioButton btn = (RadioButton) inflater.inflate(R.layout.layout_checkbox_item, null);
+            btn.setText(entity.getName());
+            btn.setId(entity.getId());
+            btn.setTag(entity);
+            check.addView(btn);
+            if (entity.isSelected()) {
+                check.check(entity.getId());
+            }
+            if (!entity.isDownload()) {
+                btn.setTextColor(getResources().getColor(R.color.colorGray));
+            }
+        }
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+                onClickListener.onClick(view);
+            }
+        });
+        dialog.setContentView(menu);
+        dialog.show();
+    }
+
+    @OnClick(R.id.action_bar_btn_menu)
+    public void action_bar_btn_menu() {
+        final PopWindowUtil.Builder builder = new PopWindowUtil.Builder(BookListActivity.this);
+        PopWindowUtil.PopWindow popWindow = builder.setHasOpenAnim(true)
+                .setCover(true)
+                .setCancelable(true)
+                .create(new MainMenuHolder(getApplicationContext(), new BaseHolder.OnCloseListener<Integer, Void, Void>() {
+                    @Override
+                    public void onClick(boolean isClick, Integer param1, Void param2, Void param3) {
+                        switch (param1) {
+                            case R.id.btn_main_menu_changetextsize:
+                                changeTextSize();
+                                break;
+                            case R.id.btn_main_menu_changefont:
+                                changeFont();
+                                break;
+                            case R.id.btn_main_menu_changebg:
+                                changeBg();
+                                break;
+                            case R.id.btn_main_menu_cancel:
+                                break;
+                        }
+                        builder.closeWindow();
+                    }
+                }));
+        PopWindowUtil.getInstance().insertPop(popWindow);
+    }
+
     /**
      * 字体大小
      */
-    private void menu_0() {
+    private void changeTextSize() {
         int fontSize = config.getInt("fontSize", -1);
         MakeDialogUtil.showInputDialog(this, "编辑页面字体大小", String.valueOf(fontSize), "", InputType.TYPE_CLASS_NUMBER, new MakeDialogUtil.OnInputCallBack() {
             @Override
@@ -200,7 +266,7 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
     /**
      * 更改字体
      */
-    private void menu_1() {
+    private void changeFont() {
         fontlist.clear();
         FontEntity def = new FontEntity();
         def.setId(0);
@@ -285,84 +351,10 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
         });
     }
 
-    private FontEntity selectEntity;
-
-    public void showChangeFontDialog(RadioGroup.OnCheckedChangeListener listener, final View.OnClickListener onClickListener) {
-        if (fontlist == null || fontlist.size() == 0)
-            return;
-        final Dialog dialog = MakeDialogUtil.buildFullDialog(this);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View menu = inflater.inflate(R.layout.layout_dialog_checkbox, null);
-        final RadioGroup check = (RadioGroup) menu.findViewById(R.id.rg_dialog_check);
-        Button btn_confirm = (Button) menu.findViewById(R.id.btn_dialog_confirm);
-        check.setOnCheckedChangeListener(listener);
-        for (int i = 0; i < fontlist.size(); i++) {
-            FontEntity entity = fontlist.get(i);
-            RadioButton btn = (RadioButton) inflater.inflate(R.layout.layout_checkbox_item, null);
-            btn.setText(entity.getName());
-            btn.setId(entity.getId());
-            btn.setTag(entity);
-            check.addView(btn);
-            if (entity.isSelected()) {
-                check.check(entity.getId());
-            }
-            if (!entity.isDownload()) {
-                btn.setTextColor(getResources().getColor(R.color.colorGray));
-            }
-        }
-        btn_confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.cancel();
-                onClickListener.onClick(view);
-            }
-        });
-        dialog.setContentView(menu);
-        dialog.show();
-    }
-
-    @OnClick(R.id.action_bar_btn_menu)
-    public void action_bar_btn_menu() {
-        MakeDialogUtil.showMenuDialog(this, menu, new MakeDialogUtil.OnMenuCallBack() {
-            @Override
-            public void onCallBack(int i) {
-                if (i == 0) {
-                    menu_0();
-                } else if (i == 1) {
-                    menu_1();
-                } else if (i == 2) {
-                    menu_2();
-                }
-
-            }
-
-        });
-    }
-
-    @OnClick(R.id.btn_add)
-    public void btn_add() {
-        MakeDialogUtil.showInputDialog(this, "请输入书名", null, null, new MakeDialogUtil.OnInputCallBack() {
-            @Override
-            public void onCallBack(String param) {
-                if (param != null && !"".equals(param.trim())) {
-                    File bookfile = new File(getExternalFilesDir(null) + Constants.path.BOOKLIST_DIR + param);
-                    if (bookfile.exists() && bookfile.isDirectory()) {
-                        Toast.makeText(BookListActivity.this, "书名重复", Toast.LENGTH_SHORT).show();
-                    } else {
-                        bookfile.mkdirs();
-                        refrashBookListView();
-                    }
-                } else {
-                    Toast.makeText(BookListActivity.this, "书名不能为空", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     /**
      * 更改背景色
      */
-    private void menu_2() {
+    private void changeBg() {
         //TODO
         showChangeBGDialog(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -379,6 +371,26 @@ public class BookListActivity extends MyActivity implements AdapterView.OnItemCl
                     case R.id.btn_checkbg_white:
                         config.edit().putInt("editbg", 2).commit();
                         break;
+                }
+            }
+        });
+    }
+
+    //@OnClick(R.id.btn_add)
+    public void btn_add() {
+        MakeDialogUtil.showInputDialog(this, "请输入书名", null, null, new MakeDialogUtil.OnInputCallBack() {
+            @Override
+            public void onCallBack(String param) {
+                if (param != null && !"".equals(param.trim())) {
+                    File bookfile = new File(getExternalFilesDir(null) + Constants.path.BOOKLIST_DIR + param);
+                    if (bookfile.exists() && bookfile.isDirectory()) {
+                        Toast.makeText(BookListActivity.this, "书名重复", Toast.LENGTH_SHORT).show();
+                    } else {
+                        bookfile.mkdirs();
+                        refrashBookListView();
+                    }
+                } else {
+                    Toast.makeText(BookListActivity.this, "书名不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
         });

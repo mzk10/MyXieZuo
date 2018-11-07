@@ -4,7 +4,7 @@
     android:layout_height="@dimen/dimen_44dip"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
-    android:background="@color/colorAccent">
+    android:background="@color/colorDefaultTheme">
 
     <ImageView
         android:id="@+id/action_bar_btn_back"
@@ -23,15 +23,15 @@
         >
         <TextView
             android:id="@+id/action_bar_tv_title_l"
-            style="@style/tv_title"
+            style="@style/style_tv_title"
             />
         <TextView
             android:id="@+id/action_bar_tv_title"
-            style="@style/tv_title"
+            style="@style/style_tv_title"
              />
         <TextView
             android:id="@+id/action_bar_tv_title_r"
-            style="@style/tv_title"
+            style="@style/style_tv_title"
             />
 
     </LinearLayout>

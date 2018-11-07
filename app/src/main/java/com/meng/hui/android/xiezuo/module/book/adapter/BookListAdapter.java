@@ -66,7 +66,6 @@ public class BookListAdapter extends BaseAdapter {
     }
 
     public class BookListItemHolder {
-
         View view;
         @BindView(R.id.tv_booklist_item_bookname)
         TextView tv_booklist_item_bookname;
@@ -90,49 +89,6 @@ public class BookListAdapter extends BaseAdapter {
             this.item = item;
         }
     }
-
-
-    /*
-
-        {
-            View.OnLongClickListener longlistener = longlistenerMap.get(i);
-            if (longlistener == null) {
-                longlistener = new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        MakeDialogUtil.showMenuDialog(BookListActivity.this, new String[]{"删除书籍", "取消"}, new MakeDialogUtil.OnMenuCallBack() {
-                            @Override
-                            public void onCallBack(int i) {
-                                if (i == 0) {
-                                    String bookName = item.getBookName();
-                                    File bookfile = new File(getExternalFilesDir(null) + Constants.path.BOOKLIST_DIR + bookName);
-                                    if (bookfile.exists() && bookfile.isDirectory()) {
-                                        File[] files = bookfile.listFiles();
-                                        if (files != null) {
-                                            for (File file : files) {
-                                                file.delete();
-                                            }
-                                        }
-                                        boolean delete = bookfile.delete();
-                                        if (delete) {
-                                            Toast.makeText(BookListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                                            refrashBookListView();
-                                        } else {
-                                            Toast.makeText(BookListActivity.this, "删除失败，请等待下一版本解决", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                        return true;
-                    }
-                };
-                longlistenerMap.put(i, longlistener);
-            }
-            view.setOnLongClickListener(longlistener);
-        }
-    */
-
 
 
 }

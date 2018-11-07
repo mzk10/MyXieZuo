@@ -34,7 +34,7 @@ import butterknife.OnClick;
  * Created by mzk10 on 2017/7/24.
  */
 
-public class VolListActivity extends MyActivity {
+public class VolListActivity extends MyActivity implements View.OnClickListener {
 
     private static final String TAG = "VolListActivity";
     private static final String BOOKLIST_DIR = "/booklist/";
@@ -83,6 +83,11 @@ public class VolListActivity extends MyActivity {
         vollist_comparator = new MyComparator();
         lv_vollist.setAdapter(vollist_adapter);
         refrashVolListView();
+
+        View add = LayoutInflater.from(getApplicationContext()).inflate(R.layout.layout_vollist_item_add, lv_vollist, false);
+        add.setOnClickListener(this);
+        lv_vollist.addFooterView(add);
+        vollist_adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -122,8 +127,8 @@ public class VolListActivity extends MyActivity {
             for (File volfile : volFiles) {
                 if (volfile.exists() && !volfile.isDirectory()) {
                     VolEntity entity = new VolEntity();
-                    entity.setValName(volfile.getName());
-                    entity.setValPath(volfile.getPath());
+                    entity.setVolName(volfile.getName());
+                    entity.setVolPath(volfile.getPath());
                     vollist.add(entity);
                 }
             }
@@ -149,11 +154,6 @@ public class VolListActivity extends MyActivity {
 
     @OnClick(R.id.action_bar_btn_menu)
     public void action_bar_btn_menu() {
-    }
-
-    @OnClick(R.id.btn_add)
-    public void btn_add() {
-        createVol();
     }
 
     private void createVol() {
@@ -187,6 +187,11 @@ public class VolListActivity extends MyActivity {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        createVol();
+    }
+
     private class MyAdapter extends BaseAdapter {
 
         @Override
@@ -214,16 +219,17 @@ public class VolListActivity extends MyActivity {
             }
             final VolEntity item = getItem(position);
             Holder holder = (Holder) view.getTag();
-            holder.volname.setText(item.getValName());
+            holder.volname.setText(item.getVolName());
 
             View.OnClickListener listener = listenerMap.get(position);
             if (listener == null) {
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String valPath = item.getValPath();
+                        String vol_path = item.getVolPath();
                         Intent intent = new Intent(VolListActivity.this, VolEditActivity.class);
-                        intent.putExtra("valPath", valPath);
+                        intent.putExtra("vol_path", vol_path);
+                        intent.putExtra("name", item.getVolName());
                         startActivity(intent);
                     }
                 };
@@ -240,18 +246,18 @@ public class VolListActivity extends MyActivity {
                             @Override
                             public void onCallBack(int i) {
                                 if (i == 0) {
-                                    Utils.showToast(VolListActivity.this, "删除" + item.getValName());
-                                    File file = new File(item.getValPath());
+                                    Utils.showToast(VolListActivity.this, "删除" + item.getVolName());
+                                    File file = new File(item.getVolPath());
                                     if (file.exists())
                                         file.delete();
-                                    File filebak = new File(item.getValPath() + Constants.VOLACTION_EXT_NAME);
+                                    File filebak = new File(item.getVolPath() + Constants.VOLACTION_EXT_NAME);
                                     if (filebak.exists())
                                         filebak.delete();
                                     refrashVolListView();
                                 } else if (i == 1) {
                                     //TODO 修改章节名称
-                                    final File file = new File(item.getValPath());
-                                    final File filebak = new File(item.getValPath() + Constants.VOLACTION_EXT_NAME);
+                                    final File file = new File(item.getVolPath());
+                                    final File filebak = new File(item.getVolPath() + Constants.VOLACTION_EXT_NAME);
                                     MakeDialogUtil.showInputDialog(VolListActivity.this, "请输入新的章节名", FileUtil.cutExtensionName(file.getName()), "", new MakeDialogUtil.OnInputCallBack() {
                                         @Override
                                         public void onCallBack(String param) {

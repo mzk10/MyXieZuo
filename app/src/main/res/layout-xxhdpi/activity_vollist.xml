@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_ffdddddd">
+    android:background="@color/colorDefaultTheme">
 
-    <include
-        android:id="@+id/up"
-        layout="@layout/layout_action_bar" />
-
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/up">
+        android:background="@color/color_ffdddddd"
+        android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/lv_vollist"
+        <include
+            layout="@layout/layout_action_bar" />
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:cacheColorHint="@color/color_tran"
-            android:divider="@color/color_tran"
-            android:listSelector="@color/color_tran"
-            android:padding="@dimen/dimen_5dip"/>
+            >
 
-        <ImageView
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/dimen_5dip"
-            android:layout_marginEnd="@dimen/dimen_5dip"
-            android:background="@drawable/btn_add" />
+            <ListView
+                android:id="@+id/lv_vollist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@color/color_tran"
+                android:divider="@color/color_tran"
+                android:listSelector="@color/color_tran"
+                android:padding="@dimen/dimen_5dip" />
 
-    </FrameLayout>
+        </FrameLayout>
 
-
-</RelativeLayout>
+    </LinearLayout>
+</FrameLayout>

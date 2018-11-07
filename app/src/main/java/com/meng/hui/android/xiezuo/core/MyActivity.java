@@ -3,6 +3,10 @@ package com.meng.hui.android.xiezuo.core;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+
+import com.meng.hui.android.xiezuo.util.Utils;
 
 import butterknife.ButterKnife;
 
@@ -15,7 +19,12 @@ public abstract class MyActivity extends AppCompatActivity{
     @Override
     protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(bindLayout());
+        View contentView = LayoutInflater.from(getApplicationContext()).inflate(bindLayout(), null, false);
+        setContentView(contentView);
+
+        int statusHeight = Utils.getStatusHeight(getApplicationContext());
+
+        contentView.setPadding(0, statusHeight, 0, 0);
         ButterKnife.bind(this);
         initView();
         initData();

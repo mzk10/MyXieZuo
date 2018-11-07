@@ -47,7 +47,7 @@
 
                 <Button
                     android:id="@+id/btn_dialog_confirm"
-                    style="@style/dialog_confirm_button"
+                    style="@style/style_dialog_confirm_button"
                     android:text="@string/btn_confirm" />
             </FrameLayout>
 
@@ -60,7 +60,7 @@
 
                 <Button
                     android:id="@+id/btn_dialog_cancel"
-                    style="@style/dialog_confirm_button"
+                    style="@style/style_dialog_confirm_button"
                     android:text="@string/btn_cancel" />
 
             </FrameLayout>

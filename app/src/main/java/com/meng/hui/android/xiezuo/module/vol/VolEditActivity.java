@@ -28,6 +28,9 @@ import com.meng.hui.android.xiezuo.util.LinkList;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
 import com.meng.hui.android.xiezuo.util.database.FontDao;
+import com.meng.hui.android.xiezuo.util.pop.PopWindowUtil;
+import com.meng.hui.android.xiezuo.util.pop.holder.BaseHolder;
+import com.meng.hui.android.xiezuo.util.pop.holder.EditerSettingHolder;
 
 import java.io.File;
 
@@ -55,10 +58,13 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     TextView tv_voledit_count;
     @BindView(R.id.background)
     LinearLayout background;
+    @BindView(R.id.tv_vol_name)
+    TextView tv_vol_name;
+    @BindView(R.id.tv_vol_name_maohao)
+    TextView tv_vol_name_maohao;
 
-    private String valPath;
+    private String vol_path;
     private VolActionEntity action;
-    private SharedPreferences config;
 
     @Override
     public int bindLayout() {
@@ -67,24 +73,66 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
 
     @Override
     public void initView() {
+        refreshTheme();
+        String vol_name = getIntent().getStringExtra("name");
+        tv_vol_name.setText(vol_name);
     }
 
     @Override
     public void initData() {
-        valPath = getIntent().getStringExtra("valPath");
+        vol_path = getIntent().getStringExtra("vol_path");
 
-        File externalFilesDir = getExternalFilesDir(null);
-        this.config = getSharedPreferences("config", MODE_PRIVATE);
+        et_voledit_content.setOnKeyListener(this);
+
+        loadRevertAction();
+        flushRevertState();
+
+        File file = new File(vol_path);
+        String valContent = FileUtil.loadFileString(file);
+        et_voledit_content.setText(valContent);
+        try {
+            Selection.setSelection(et_voledit_content.getText(), action.getLine());
+        } catch (Exception e) {
+            XiezuoDebug.e(TAG, e);
+        }
+        flushCount(valContent);
+        et_voledit_content.addTextChangedListener(this);
+    }
+
+    /**
+     * 刷新主题
+     */
+    private void refreshTheme() {
+        refreshColor();
+        refreshFont();
+        refreshTextSize();
+    }
+
+    /**
+     * 刷新颜色
+     */
+    private void refreshColor() {
+        SharedPreferences config = getSharedPreferences("config", MODE_PRIVATE);
         int editbg = config.getInt("editbg", 1);
         if (editbg == 1) {
             background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_black));
             et_voledit_content.setTextColor(getResources().getColor(R.color.colorGray));
+            tv_vol_name.setTextColor(getResources().getColor(R.color.colorGray));
+            tv_vol_name_maohao.setTextColor(getResources().getColor(R.color.colorGray));
         } else if (editbg == 2) {
             background.setBackgroundColor(getResources().getColor(R.color.colorEditbg_white));
             et_voledit_content.setTextColor(getResources().getColor(R.color.colorBlack));
+            tv_vol_name.setTextColor(getResources().getColor(R.color.colorBlack));
+            tv_vol_name_maohao.setTextColor(getResources().getColor(R.color.colorBlack));
         }
+    }
 
-        int fontSize = this.config.getInt("fontSize", -1);
+    /**
+     * 刷新字体
+     */
+    private void refreshFont() {
+        SharedPreferences config = getSharedPreferences("config", MODE_PRIVATE);
+        File externalFilesDir = getExternalFilesDir(null);
         int selectFont = config.getInt("selectFont", 0);
         if (selectFont != 0) {
             FontDao dao = new FontDao(VolEditActivity.this);
@@ -96,29 +144,24 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
                 XiezuoDebug.i(TAG, "使用字体：" + entity.getName());
                 Typeface fromFile = Typeface.createFromFile(ttf);
                 et_voledit_content.setTypeface(fromFile);
+                tv_vol_name.setTypeface(fromFile);
+                tv_vol_name_maohao.setTypeface(fromFile);
+
             }
         } else {
             XiezuoDebug.i(TAG, "使用默认字体");
         }
+    }
 
+    /**
+     * 刷新字号
+     */
+    private void refreshTextSize() {
+        SharedPreferences config = getSharedPreferences("config", MODE_PRIVATE);
+        int fontSize = config.getInt("fontSize", 18);
         et_voledit_content.setTextSize(fontSize);
-
-        et_voledit_content.setOnKeyListener(this);
-
-        loadRevertAction();
-
-        flushRevertState();
-
-        File file = new File(valPath);
-        String valContent = FileUtil.loadFileString(file);
-        et_voledit_content.setText(valContent);
-        try {
-            Selection.setSelection(et_voledit_content.getText(), action.getLine());
-        } catch (Exception e) {
-            XiezuoDebug.e(TAG, e);
-        }
-        flushCount(valContent);
-        et_voledit_content.addTextChangedListener(this);
+        tv_vol_name.setTextSize(fontSize - 2);
+        tv_vol_name_maohao.setTextSize(fontSize - 2);
     }
 
     @Override
@@ -157,6 +200,33 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         unRevertText();
     }
 
+    @OnClick(R.id.btn_voledit_setting)
+    public void btn_voledit_setting() {
+        final PopWindowUtil.Builder builder = new PopWindowUtil.Builder(VolEditActivity.this);
+        SharedPreferences config = getSharedPreferences("config", MODE_PRIVATE);
+        int fontSize = config.getInt("fontSize", 18);
+        PopWindowUtil.PopWindow settingWindow = builder.setCover(true)
+                .setHasOpenAnim(true)
+                .setHasCloseAnim(true)
+                .setCancelable(false)
+                .create(new EditerSettingHolder(getApplicationContext(), new BaseHolder.OnCloseListener<Integer, Integer, String>() {
+                    @Override
+                    public void onClick(boolean isClick, Integer param1, Integer param2, String param3) {
+                        if (isClick){
+                            if (param1 == 0){
+                                refreshTextSize();
+                            }else if (param1 == 1){
+                                refreshColor();
+                            }
+                        }else {
+                            builder.closeWindow();
+                        }
+
+                    }
+                }));
+        PopWindowUtil.getInstance().insertPop(settingWindow);
+    }
+
     /**
      * 保存文本
      */
@@ -165,7 +235,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             @Override
             protected Void doInBackground(String... param) {
                 String string = param[0];
-                FileUtil.saveStringToFile(string, new File(valPath));
+                FileUtil.saveStringToFile(string, new File(vol_path));
                 return null;
             }
         };
@@ -201,10 +271,10 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
     private void copyText(String text) {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         // 将文本内容放到系统剪贴板里。
-        if (cm!=null){
+        if (cm != null) {
             cm.setPrimaryClip(ClipData.newPlainText(null, text));
             Toast.makeText(this, "内容复制成功", Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(this, "复制失败，请自行操作", Toast.LENGTH_SHORT).show();
         }
     }
@@ -343,7 +413,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             protected Void doInBackground(Void... param) {
                 int selectionStart = Selection.getSelectionStart(et_voledit_content.getText());
                 action.setLine(selectionStart);
-                FileUtil.saveSerializable(action, valPath + Constants.VOLACTION_EXT_NAME);
+                FileUtil.saveSerializable(action, vol_path + Constants.VOLACTION_EXT_NAME);
                 return null;
             }
         };
@@ -354,7 +424,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
      * 读取保存过的撤销事件
      */
     private void loadRevertAction() {
-        Object act = FileUtil.loadSerializable(valPath + Constants.VOLACTION_EXT_NAME);
+        Object act = FileUtil.loadSerializable(vol_path + Constants.VOLACTION_EXT_NAME);
         if (act != null && act instanceof VolActionEntity) {
             action = (VolActionEntity) act;
         } else {
@@ -362,7 +432,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
         }
 
         {
-            String pathrev = valPath + ".rev";
+            String pathrev = vol_path + ".rev";
             File file = new File(pathrev);
             if (file.exists()) {
                 Object rev = FileUtil.loadSerializable(pathrev);
@@ -374,7 +444,7 @@ public class VolEditActivity extends MyActivity implements TextWatcher, View.OnK
             }
         }
         {
-            String pathunr = valPath + ".unr";
+            String pathunr = vol_path + ".unr";
             File file = new File(pathunr);
             if (file.exists()) {
                 Object unr = FileUtil.loadSerializable(pathunr);

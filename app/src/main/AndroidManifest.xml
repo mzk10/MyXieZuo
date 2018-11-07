@@ -40,8 +40,8 @@
         </activity>
         <activity
             android:name=".module.vol.VolEditActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait">
-
         </activity>
 
         <provider

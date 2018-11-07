@@ -13,9 +13,8 @@ import android.widget.ImageView;
 import com.google.gson.reflect.TypeToken;
 import com.meng.hui.android.xiezuo.core.Constants;
 import com.meng.hui.android.xiezuo.core.MyActivity;
-import com.meng.hui.android.xiezuo.util.database.FontDao;
-import com.meng.hui.android.xiezuo.entity.ResponseData;
 import com.meng.hui.android.xiezuo.entity.FontEntity;
+import com.meng.hui.android.xiezuo.entity.ResponseData;
 import com.meng.hui.android.xiezuo.entity.VersionCheckEntity;
 import com.meng.hui.android.xiezuo.module.book.BookListActivity;
 import com.meng.hui.android.xiezuo.util.FileUtil;
@@ -23,10 +22,13 @@ import com.meng.hui.android.xiezuo.util.GsonUtils;
 import com.meng.hui.android.xiezuo.util.MakeDialogUtil;
 import com.meng.hui.android.xiezuo.util.Utils;
 import com.meng.hui.android.xiezuo.util.XiezuoDebug;
+import com.meng.hui.android.xiezuo.util.database.FontDao;
 import com.meng.hui.android.xiezuo.util.http.HttpRequester;
 
 import java.io.File;
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Created by mzk10 on 2017/7/12.
@@ -34,8 +36,10 @@ import java.util.List;
 
 public class StartActivity extends MyActivity {
 
-    private ImageView iv_anim_welcome_scale;
-    private ImageView iv_anim_welcome;
+    @BindView(R.id.iv_anim_welcome_icon)
+    ImageView iv_anim_welcome_icon;
+    @BindView(R.id.iv_anim_welcome)
+    ImageView iv_anim_welcome;
 
     private Animation anim_welcome_scale;
     private Animation anim_welcome;
@@ -50,8 +54,6 @@ public class StartActivity extends MyActivity {
 
     @Override
     public void initView() {
-        iv_anim_welcome_scale = (ImageView) findViewById(R.id.iv_anim_welcome_icon);
-        iv_anim_welcome = (ImageView) findViewById(R.id.iv_anim_welcome);
     }
 
     @Override
@@ -110,7 +112,7 @@ public class StartActivity extends MyActivity {
 
     @Override
     public void startAction() {
-        iv_anim_welcome_scale.startAnimation(anim_welcome_scale);
+        iv_anim_welcome_icon.startAnimation(anim_welcome_scale);
     }
 
     @Override
@@ -169,7 +171,7 @@ public class StartActivity extends MyActivity {
                         updateFontList();
                     }
                 } else {
-                    XiezuoDebug.i(TAG, result.getInfo());
+                    XiezuoDebug.i(TAG, result == null ? "服务器错误" : result.getInfo());
                     updateFontList();
                 }
             }

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dimen_20dip"
+        android:background="@drawable/edit_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_20dip">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_2dip">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_1dip"
+                android:text="@string/main_menu_changetextsize"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/font_14sp" />
+
+            <SeekBar
+                android:id="@+id/seek_setting_testsize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_1dip"
+                android:max="2"
+                android:progressTint="@color/color_tran" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_1dip"
+                android:paddingEnd="@dimen/dimen_10dip"
+                android:paddingStart="@dimen/dimen_10dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:text="@string/main_menu_changetextsize_small"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/main_menu_changetextsize_normal"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:text="@string/main_menu_changetextsize_big"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_14sp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:layout_margin="@dimen/dimen_2dip"
+            android:background="@color/colorGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_2dip">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_1dip"
+                android:text="@string/main_menu_changebg"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/font_14sp" />
+
+            <SeekBar
+                android:id="@+id/seek_setting_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_1dip"
+                android:max="1"
+                android:progressTint="@color/color_tran" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_1dip"
+                android:paddingEnd="@dimen/dimen_10dip"
+                android:paddingStart="@dimen/dimen_10dip">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:text="@string/main_menu_changebg_black"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:text="@string/main_menu_changebg_white"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/font_14sp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:layout_margin="@dimen/dimen_2dip"
+            android:background="@color/colorGray" />
+
+        <Button
+            android:id="@+id/btn_main_menu_changefont"
+            style="@style/style_menu_item"
+            android:text="@string/main_menu_changefont" />
+
+        <Button
+            android:id="@+id/btn_main_menu_cancel"
+            style="@style/style_menu_item"
+            android:text="@string/main_menu_close" />
+
+
+    </LinearLayout>
+
+</FrameLayout>

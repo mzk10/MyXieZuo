@@ -6,22 +6,22 @@ package com.meng.hui.android.xiezuo.module.vol.entity;
 
 public class VolEntity {
 
-    private String valName;
-    private String valPath;
+    private String volName;
+    private String volPath;
 
-    public String getValName() {
-        return valName;
+    public String getVolName() {
+        return volName;
     }
 
-    public void setValName(String valName) {
-        this.valName = valName;
+    public void setVolName(String volName) {
+        this.volName = volName;
     }
 
-    public String getValPath() {
-        return valPath;
+    public String getVolPath() {
+        return volPath;
     }
 
-    public void setValPath(String valPath) {
-        this.valPath = valPath;
+    public void setVolPath(String volPath) {
+        this.volPath = volPath;
     }
 }
