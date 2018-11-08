@@ -1,11 +1,51 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Black.NoTitleBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/color_tran</item>
+        <item name="android:windowEnableSplitTouch">true</item>
         <!-- Customize your theme here. -->
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
         <!--<item name="colorAccent">@color/colorAccent</item>-->
+    </style>
+
+    <style name="MenuTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="style_dialog_confirm_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/dimen_35dip</item>
+        <item name="android:background">@drawable/btn_confirm</item>
+        <item name="android:paddingBottom">@dimen/dimen_5dip</item>
+        <item name="android:paddingLeft">@dimen/dimen_20dip</item>
+        <item name="android:paddingRight">@dimen/dimen_20dip</item>
+        <item name="android:paddingTop">@dimen/dimen_5dip</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">@dimen/font_16sp</item>
+    </style>
+
+    <style name="style_tv_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/font_18sp</item>
+    </style>
+
+    <style name="style_menu_item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dimen_35dip</item>
+        <item name="android:layout_margin">@dimen/dimen_10dip</item>
+        <item name="android:background">@drawable/booklist_item_bg</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textSize">@dimen/font_16sp</item>
     </style>
 
 </resources>

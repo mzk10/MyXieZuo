@@ -1,29 +1,58 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "27.0.3"
 
-    aaptOptions.cruncherEnabled = false
-    aaptOptions.useNewCruncher = false
+//    aaptOptions.cruncherEnabled = false
+//    aaptOptions.useNewCruncher = false
 
     defaultConfig {
         applicationId "com.meng.hui.android.xiezuo"
         minSdkVersion 19
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        targetSdkVersion 25
+        versionCode 4
+        versionName "V0.2.3beta"
+        //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        config {
+            keyAlias 'xiezuo'
+            keyPassword 'Wojiushi1'
+            storeFile file('../tumao.jks')
+            storePassword 'Wojiushi1'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.config
+//            debuggable false
+//            zipAlignEnabled false
+            zipAlignEnabled false
         }
     }
+
+//    lintOptions {
+//        checkReleaseBuilds false
+//        // Or, if you prefer, you can continue to check for errors in release builds,
+//        // but continue the build even when errors are found:
+//        abortOnError false
+//    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/chardet.jar')
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    apt 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.google.code.gson:gson:2.8.5'
 }

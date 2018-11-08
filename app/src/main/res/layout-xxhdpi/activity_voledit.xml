@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_44dip">
+
+        <ImageView
+            android:id="@+id/btn_voledit_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/color_tran"
+            android:padding="@dimen/dimen_5dip"
+            android:src="@drawable/btn_back" />
+
+        <ImageView
+            android:id="@+id/btn_voledit_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/color_tran"
+            android:padding="@dimen/dimen_5dip"
+            android:src="@drawable/btn_copy" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/btn_voledit_revert"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/color_tran"
+                android:padding="@dimen/dimen_5dip"
+                android:src="@drawable/btn_valedit_revert" />
+
+            <ImageView
+                android:id="@+id/btn_voledit_unrevert"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/color_tran"
+                android:padding="@dimen/dimen_5dip"
+                android:src="@drawable/btn_valedit_unrevert" />
+
+            <ImageView
+                android:id="@+id/btn_voledit_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/color_tran"
+                android:padding="@dimen/dimen_5dip"
+                android:src="@drawable/btn_valedit_setting" />
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dip"
+        android:background="@color/colorGray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_5dip">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_vol_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_tran"
+                />
+            <TextView
+                android:id="@+id/tv_vol_name_maohao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_tran"
+                android:text="@string/maohao"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dip"
+            android:layout_marginBottom="@dimen/dimen_2dip"
+            android:background="@color/colorGray"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            >
+
+            <EditText
+                android:id="@+id/et_voledit_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_tran"
+                android:gravity="start|top"
+                android:inputType="none"
+                android:lineSpacingMultiplier="1.2" />
+
+        </ScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_1dip"
+            android:layout_margin="@dimen/dimen_5dip"
+            android:background="@color/colorGray" />
+
+        <TextView
+            android:id="@+id/tv_voledit_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorGray"
+            android:textSize="@dimen/font_12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

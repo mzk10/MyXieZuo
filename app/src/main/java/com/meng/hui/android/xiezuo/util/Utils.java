@@ -1,22 +1,9 @@
 package com.meng.hui.android.xiezuo.util;
 
-import com.meng.hui.android.xiezuo.entity.BookEntity;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.text.Format;
-import java.text.SimpleDateFormat;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.widget.Toast;
 
 /**
  * Created by mzk10 on 2017/7/21.
@@ -26,138 +13,14 @@ public class Utils {
 
     private static final String TAG = "Utils";
 
-    public static final BookEntity getBookDirInfo(File dir) {
-        if (dir.exists() && dir.isDirectory()) {
-            FileFilter filter = new FileFilter() {
-                @Override
-                public boolean accept(File file) {
-                    String name = file.getName();
-                    String fileExtensionName = getFileExtensionName(name);
-                    if (!file.isDirectory() && "txt".equals(fileExtensionName)) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            };
-            File[] files = dir.listFiles(filter);
-            BookEntity entity = new BookEntity();
-            entity.setBookCount(files.length);
-            entity.setBookName(dir.getName());
-            entity.setLastDate(dir.lastModified());
-            return entity;
-        }
-        return null;
-    }
-
-    /**
-     * 获取文件扩展名
-     *
-     * @param file
-     * @return
-     */
-    public static String getFileExtensionName(String file) {
-        int i = file.lastIndexOf('.');
-        int leg = file.length();
-        return (i > 0 ? (i + 1) == leg ? " " : file.substring(i + 1,
-                file.length()) : " ");
-    }
-
-    /**
-     * 从文件读取文本内容
-     *
-     * @param file
-     * @return
-     */
-    public static String loadFileString(File file) {
-        String result = "";
-        FileInputStream fis = null;
-        InputStreamReader isr = null;
-        String encode = "UTF-8";
-        if (file.length() > 0) {
-            try {
-                encode = new FileCharsetDetector().guessFileEncoding(file);
-                if (encode.contains(","))
-                encode = encode.substring(0, encode.indexOf(","));
-            } catch (IOException e) {
-            }
-        }
-        try {
-            fis = new FileInputStream(file);
-            isr = new InputStreamReader(fis, encode);
-            int len = 0;
-            char[] buffer = new char[1024];
-            StringBuffer sb = new StringBuffer();
-            while ((len = isr.read(buffer)) != -1) {
-                sb.append(buffer, 0, len);
-            }
-            result = sb.toString();
-        } catch (Exception e) {
-            XiezuoDebug.e(TAG, "", e);
-        } finally {
-            if (isr != null) {
-                try {
-                    isr.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * 将文字写入文件
-     * @param string
-     * @param file
-     */
-    public static void saveStringToFile(String string, File file)
-    {
-        FileOutputStream fos = null;
-        OutputStreamWriter osw = null;
-        try {
-            fos = new FileOutputStream(file);
-            osw = new OutputStreamWriter(fos, "UTF-8");
-            osw.write(string);
-            osw.flush();
-        } catch (Exception e) {
-            XiezuoDebug.e(TAG, "", e);
-        } finally {
-            if (osw!=null)
-            {
-                try {
-                    osw.close();
-                } catch (IOException e) {
-                    XiezuoDebug.e(TAG, "", e);
-                }
-            }
-            if (fos!=null)
-            {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    XiezuoDebug.e(TAG, "", e);
-                }
-            }
-        }
-
-    }
-
     /**
      * 获取文字实际长度
+     *
      * @param content
      * @return
      */
     public static int getStringAbsLength(String content) {
-        if (content!=null)
-        {
+        if (content != null) {
             char[] chars = null;
             chars = content.toCharArray();
             int count = 0;
@@ -171,69 +34,80 @@ public class Utils {
                 }
             }
             return count;
-        }else
-        {
+        } else {
             return 0;
         }
 
     }
 
+    public static void showToast(Context context, String str) {
+        Toast.makeText(context, str, Toast.LENGTH_SHORT).show();
+    }
+
     /**
-     * 保存可序列化对象
-     * @param obj
-     * @param path
+     * 获取在Manifest文件中指定的versionName
+     * <p>
+     * {@linkplain PackageInfo#versionName}
+     *
+     * @param context
+     * @return
      */
-    public static void saveSerializable(Serializable obj, String path)
-    {
-        if (obj!=null)
-        {
-            FileOutputStream fos = null;
-            ObjectOutputStream oos = null;
-            try {
-                fos = new FileOutputStream(path);
-                oos = new ObjectOutputStream(fos);
-                oos.writeObject(obj);
-                oos.flush();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }finally
-            {
-                if (oos!=null)
-                {
-                    try {
-                        oos.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (fos!=null)
-                {
-                    try {
-                        fos.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+    public static String getAppVersionName(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo info = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public static Object loadSerializable(String path)
-    {
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
+    /**
+     * 获取在Manifest文件中指定的versionCode
+     * <p>
+     * {@linkplain PackageInfo#versionCode}
+     *
+     * @param context
+     * @return
+     */
+    public static int getAppVersionCode(Context context) {
+        PackageManager packageManager = context.getPackageManager();
         try {
-            fis = new FileInputStream(path);
-            ois = new ObjectInputStream(fis);
-            Object o = ois.readObject();
-            return o;
-        }catch (Exception e)
-        {
+            PackageInfo info = packageManager.getPackageInfo(context.getPackageName(), 0);
+            return info.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+
+    public static String getFilenameFromUrl(String url)
+    {
+        String name = url.substring(url.lastIndexOf("/")+1, url.length());
+        return name;
+    }
+
+    /**
+     * 获得状态栏的高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusHeight(Context context) {
+        int statusHeight = -1;
+        try {
+            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
+            Object object = clazz.newInstance();
+            int height = Integer.parseInt(clazz.getField("status_bar_height")
+                    .get(object).toString());
+            statusHeight = context.getResources().getDimensionPixelSize(height);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return statusHeight;
     }
-
 
 
 

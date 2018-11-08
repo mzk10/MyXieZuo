@@ -2,4 +2,27 @@
     <string name="app_name">土猫写作</string>
     <string name="btn_confirm">确定</string>
     <string name="btn_cancel">取消</string>
+
+    <string name="main_menu_changetextsize">更改字体大小</string>
+    <string name="main_menu_changetextsize_small">小</string>
+    <string name="main_menu_changetextsize_normal">中</string>
+    <string name="main_menu_changetextsize_big">大</string>
+
+    <string name="main_menu_changefont">更改字体</string>
+    <string name="main_menu_changebg">页面背景色</string>
+    <string name="main_menu_changebg_black">黑</string>
+    <string name="main_menu_changebg_white">白</string>
+
+
+    <string name="main_menu_cancel">取消</string>
+    <string name="main_menu_close">关闭</string>
+
+    <string name="book_list">小说列表</string>
+    <string name="shumingzuo">《</string>
+    <string name="shumingyou">》</string>
+    <string name="maohao">：</string>
+    <string name="vol_count">章节数：</string>
+    <string name="edit_time">修改时间：</string>
+    <string name="def_pro">0%</string>
+    <string name="delete_vol">删除章节</string>
 </resources>

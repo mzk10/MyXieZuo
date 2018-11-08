@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dimen_5dip">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/booklist_item_bg"
+        android:paddingBottom="@dimen/dimen_5dip"
+        android:paddingEnd="@dimen/dimen_10dip"
+        android:paddingStart="@dimen/dimen_10dip"
+        android:paddingTop="@dimen/dimen_5dip">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_add" />
+
+    </FrameLayout>
+
+</FrameLayout>

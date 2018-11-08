@@ -49,17 +49,17 @@ public class XiezuoDebug
         }
     }
 
-    public static void e(String tag, String msg, Throwable tr)
+    public static void e(String tag, Throwable tr)
     {
         DebugLevel level = getDebugLevel();
         if (level == DebugLevel.LEVEL_TECH)
         {
             try
             {
-                Log.e(TAG, buildLogMsg(tag, msg.substring(0, MAX_VALUE)), tr);
+                Log.e(TAG, buildLogMsg(tag, tr.getMessage().substring(0, MAX_VALUE)), tr);
             } catch (Exception e)
             {
-                Log.e(TAG, buildLogMsg(tag, msg), tr);
+                Log.e(TAG, buildLogMsg(tag, tr.getMessage()), tr);
             }
         }
     }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="btn_checkbg_black" type="id"/>
+    <item name="btn_checkbg_white" type="id"/>
+</resources>
